@@ -10,11 +10,11 @@
     "secret": "secret"
   },
   "db": {
-    "host": "112.85.240.165",
+    "host": "127.0.0.1",
     "port": 3306,
     "database": "lab",
-    "user": "dev",
-    "password": "123654987",
+    "user": "root",
+    "password": "123456",
     "connectionLimit": 50,
     "charset": "utf8mb4",
     "collation": "utf8mb4_unicode_ci",
