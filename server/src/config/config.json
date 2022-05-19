@@ -6,14 +6,15 @@
     "production": false,
     "log": {
       "level": "debug"
-    }
+    },
+    "secret": "secret"
   },
   "db": {
-    "host": "localhost",
+    "host": "112.85.240.165",
     "port": 3306,
     "database": "lab",
-    "user": "root",
-    "password": "123456",
+    "user": "dev",
+    "password": "123654987",
     "connectionLimit": 50,
     "charset": "utf8mb4",
     "collation": "utf8mb4_unicode_ci",

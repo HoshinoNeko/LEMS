@@ -1,18 +1,27 @@
 const express = require('express');
-const app = new express()
 const fs = require('fs')
-const bodyParser = require('body-parser')
 const log = require('loglevel');
 const configPath = './src/config/config.json';
-const sql = require('./model/db.js')
+const cors = require('cors')
 
 const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 let logLevel = config.system.log.level || 'error'
 log.setLevel(logLevel);
 log.debug(config);
 
+const app = express();
+const corsOptions = {
+    origin: '*'
+};
+app.use(cors(corsOptions));
 
-sql.query('SELECT * FROM `users`', function (error, results, fields) {
-    if (error) throw error;
-    console.log(results);
-});
+app.use(express.json())
+
+app.use(express.urlencoded({ extended: true }))
+const api = require('./src/routers/api')
+app.use('/api', api)
+const PORT = config.server.port || 8080;
+app.listen(PORT,() => {
+    log.info(`Starting server on port ${config.server.port}`);
+})
+
