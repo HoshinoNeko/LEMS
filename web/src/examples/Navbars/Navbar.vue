@@ -115,6 +115,7 @@
                   </div>
                 </a>
               </li>
+              <!--
               <li class="mb-2">
                 <a class="dropdown-item border-radius-md" href="javascript:;">
                   <div class="py-1 d-flex">
@@ -138,6 +139,7 @@
                   </div>
                 </a>
               </li>
+              -->
               <li>
                 <a class="dropdown-item border-radius-md" href="javascript:;">
                   <div class="py-1 d-flex">

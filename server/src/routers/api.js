@@ -1,17 +1,20 @@
 const router = require('express').Router();
 const user = require('./user')
+const User = require('../model/user')
+const Instrument = require('../model/instrument')
 const instrument = require('./instrument')
+const rent = require('./rent')
+const ireturn = require('./ireturn')
+const incident = require('./incident')
 const jwt = require("jsonwebtoken");
 const fs = require('fs');
 const path = require("path");
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, "./../config/config.json"), 'utf8'));
 
-
-
 router.use(
     (req, res, next) => {
-        let token = req.body.token || req.query.token || req.headers.token || req.headers.authorization;
-        console.log(token)
+        let token = req.headers.authorization;
+        console.log(`Token: ${token}`)
         if ( req.path === "/user/login" || req.path === "/user/signup" || req.path === "/instrument" ) {
             next();
         } else {
@@ -23,18 +26,29 @@ router.use(
                     if (err) {
                         res.json({
                             code: -1,
-                            msg: 'token验证失败'
+                            msg: 'token Authorization failed'
                         })
                     } else {
                         req.decoded = decoded;
-                        console.log(decoded)
+                        console.log(decoded.id, decoded.exp)
+                        if ( req.path === "/user") {
+                            res.send({
+                                code: 0,
+                                msg: 'token ok',
+                                id: decoded.id,
+                                email: decoded.email,
+                                role: decoded.role,
+                                sname: decoded.sname,
+                                s_id: decoded.s_id
+                            })
+                        }
                         next();
                     }
                 })
             } else {
                 res.json({
                     code: -1,
-                    msg: 'token不存在'
+                    msg: 'token no exist'
                 })
             }
         }
@@ -42,4 +56,7 @@ router.use(
 )
 router.use('/user', user)
 router.use('/instrument', instrument)
+router.use('/rent', rent)
+router.use('/return', ireturn)
+router.use('/incident', incident)
 module.exports = router

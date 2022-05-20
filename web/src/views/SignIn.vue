@@ -21,15 +21,15 @@
                   <h3 class="font-weight-bolder text-success text-gradient">
                     Welcome back
                   </h3>
-                  <p class="mb-0">Enter your email and password to sign in</p>
+                  <p class="mb-0">Enter your ID and password to sign in</p>
                 </div>
                 <div class="card-body">
                   <form class="text-start" action="">
-                    <label>Student ID</label>
+                    <label>Internal ID</label>
                     <vsud-input
                       id="sid"
                       type="number"
-                      placeholder="Student ID"
+                      placeholder="Internal ID"
                       name="sid"
                       v-model="form.sid"
                     />
@@ -129,16 +129,25 @@ export default {
   methods: {
     ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
     login() {
-      let formdata = new FormData();
-      formdata.append("s_id", document.getElementById("sid").value)
-      formdata.append("password", document.getElementById("password").value)
-      console.log(formdata);
+      let s_id = document.getElementById("sid").value;
+      let password = document.getElementById("password").value;
+      console.log(s_id, password)
       const url = "http://localhost:4000/api/user/login";
       try {
-        const res = axios.post(url, formdata).then(res => res.data)
-        console.log(res)
+        axios.post(url, `s_id=${s_id}&password=${password}`).then(response => {
+          if (response.data.status === 0) {
+            this.$store.commit("setUser", response.data);
+            this.$store.commit("token", response.data.token);
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("user", JSON.stringify(response.data));
+            this.$router.push({ name: "Dashboard" });
+          } else {
+            alert("Wrong Password")
+          }
+        });
       } catch (error) {
         console.log(error);
+        alert("Wrong Password")
       }
     },
   },

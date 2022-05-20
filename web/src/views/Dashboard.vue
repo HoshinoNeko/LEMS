@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
         <mini-statistics-card
-          title="Today's Money"
-          value="$53,000"
+          title="Total Users"
+          value="5"
           :percentage="{
             value: '+505%',
             color: 'text-success',
@@ -18,7 +18,7 @@
       </div>
       <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
         <mini-statistics-card
-          title="Today's Users"
+          title="Total Devices"
           value="2,300"
           :percentage="{
             value: '+3%',
@@ -33,8 +33,8 @@
       </div>
       <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
         <mini-statistics-card
-          title="New Clients"
-          value="+3,462"
+          title="Today Rent"
+          value="2"
           :percentage="{
             value: '-2%',
             color: 'text-danger',
@@ -48,8 +48,8 @@
       </div>
       <div class="col-xl-3 col-sm-6 mb-xl-0">
         <mini-statistics-card
-          title="Sales"
-          value="$103,430"
+          title="Today Return"
+          value="30"
           :percentage="{
             value: '+5%',
             color: 'text-success',

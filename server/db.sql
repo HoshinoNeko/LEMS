@@ -45,7 +45,7 @@ drop table if exists ireturn; create table ireturn
                                      foreign key (s_id) references user(id),
                                      foreign key (i_id) references instrument(id)
                              )
-    comment 'Incident table';
+    comment 'Return table';
 
 drop table if exists incident; create table incident
                                (
@@ -54,6 +54,7 @@ drop table if exists incident; create table incident
                                    instrument_id int                        null comment 'Instrument ID',
                                    title    varchar(128)                     not null comment 'Incident title',
                                    content  text                             null comment 'Incident content',
+                                   date     datetime default current_timestamp() null comment 'Incident date',
                                    done   tinyint(1)     default 1     not null comment 'Incident is done',
                                    remark   varchar(512)                     null comment 'Remark',
                                    constraint incident_pk
@@ -72,7 +73,7 @@ drop table if exists schedule; create table schedule
                                    remark   varchar(512)                     null comment 'Remark',
                                    constraint schedule_pk
                                        primary key (id),
-                                   foreign key (user_id) references user(id),
-                                   foreign key (instrument_id) references instrument(id)
+                                       foreign key (user_id) references user(id),
+                                       foreign key (instrument_id) references instrument(id)
                                )
     comment 'Schedule table';

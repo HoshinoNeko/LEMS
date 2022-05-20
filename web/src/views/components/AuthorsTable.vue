@@ -1,7 +1,7 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6>Authors table</h6>
+      <h6>Users table</h6>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -11,12 +11,17 @@
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Author
+                User
               </th>
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
                 Function
+              </th>
+              <th
+                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+              >
+                Internal ID
               </th>
               <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
@@ -26,18 +31,18 @@
               <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Employed
+                Register at
               </th>
               <th class="text-secondary opacity-7"></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr v-for="l in users" v-bind:key="l.id">
               <td>
                 <div class="d-flex px-2 py-1">
                   <div>
                     <vsud-avatar
-                      :img="img1"
+                      img="https://secure.gravatar.com/avatar/910cf47806ccf2b1a5ac0eaa5fc12d60?s=512"
                       size="sm"
                       border-radius="lg"
                       class="me-3"
@@ -45,25 +50,27 @@
                     />
                   </div>
                   <div class="d-flex flex-column justify-content-center">
-                    <h6 class="mb-0 text-sm">John Michael</h6>
+                    <h6 class="mb-0 text-sm"> {{ l.sname }} </h6>
                     <p class="text-xs text-secondary mb-0">
-                      john@creative-tim.com
+                      {{ l.email }}
                     </p>
                   </div>
                 </div>
               </td>
               <td>
-                <p class="text-xs font-weight-bold mb-0">Manager</p>
-                <p class="text-xs text-secondary mb-0">Organization</p>
+                <p class="text-xs font-weight-bold mb-0">{{l.role}}</p>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0">{{l.s_id}}</p>
               </td>
               <td class="align-middle text-center text-sm">
-                <vsud-badge color="success" variant="gradient" size="sm"
-                  >Online</vsud-badge
+                <vsud-badge :color="statusCheckClass(l.status)" variant="gradient" size="sm"
+                  >{{ statusCheck(l.status) }}</vsud-badge
                 >
               </td>
               <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"
-                  >23/04/18</span
+                  > {{ l.reg_date }} </span
                 >
               </td>
               <td class="align-middle">
@@ -75,7 +82,17 @@
                   >Edit</a
                 >
               </td>
+              <td class="align-middle">
+                <a
+                    href="javascript:;"
+                    class="text-secondary font-weight-bold text-xs"
+                    data-toggle="tooltip"
+                    data-original-title="Delete user"
+                >Delete</a
+                >
+              </td>
             </tr>
+            <!--
             <tr>
               <td>
                 <div class="d-flex px-2 py-1">
@@ -296,6 +313,7 @@
                 >
               </td>
             </tr>
+            -->
           </tbody>
         </table>
       </div>
@@ -323,11 +341,79 @@ export default {
       img4,
       img5,
       img6,
+      users: [
+        {
+          id: 1,
+          sname: "Admin",
+          email: "Test@test.com",
+          s_id: 123456,
+          role: "Admin",
+          status: "0",
+          reg_date: "04/10/2022"
+        },
+        {
+          id: 2,
+          sname: "User",
+          email: "Test@test.com",
+          s_id: 123456,
+          role: "User",
+          status: "0",
+          reg_date: "04/10/1989"
+        },
+        {
+          id: 3,
+          sname: "Banned User",
+          email: "Test@test.com",
+          role: "User",
+          status: "1",
+          reg_date: "04/10/1990"
+        },
+        {
+          id: 4,
+          sname: "User",
+          email: "Test@test.com",
+          role: "User",
+          status: "0",
+          reg_date: "04/10/1991"
+        },
+        {
+          id: 5,
+          sname: "User",
+          email: "Test@test.com",
+          role: "User",
+          status: "0",
+          reg_date: "04/10/1992"
+        },
+        {
+          id: 6,
+          sname: "User",
+          email: "Test@test.com",
+          role: "User",
+          status: "0",
+          reg_date: "04/10/1993"
+        },
+      ]
     };
   },
   components: {
     VsudAvatar,
     VsudBadge,
   },
+  methods: {
+    statusCheck(status) {
+      if (status === "1") {
+        return "Banned";
+      } else {
+        return "Enabled";
+      }
+    },
+    statusCheckClass(status) {
+      if (status === "0") {
+        return "success";
+      } else {
+        return "danger";
+      }
+    }
+  }
 };
 </script>

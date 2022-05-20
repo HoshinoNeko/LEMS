@@ -12,8 +12,8 @@ const Device = function(device) {
   this.department = device.department
 }
 
-const newDevice = (id,name,symbol,location,instruction,enable,remark,add_date,department, callback) => {
-    sql.query(`INSERT INTO instrument (id,name,symbol,location,instruction,enable,remark,add_date,department) VALUES ('${id}','${name}','${symbol}','${location}','${instruction}','${enable}','${remark}','${add_date}','${department}')`, (err, res) => {
+const newDevice = (name,symbol,location,instruction,enable,remark,department, callback) => {
+    sql.query(`INSERT INTO instrument (name,symbol,location,instruction,enable,remark,department) VALUES ('${name}','${symbol}','${location}','${instruction}','${enable}','${remark}','${department}')`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             callback(null, err);
@@ -71,6 +71,53 @@ const getAllDevice = (callback) => {
         callback(null, res);
     });
 }
+const isAvailableDevice = (id, callback) => {
+    sql.query(`SELECT * FROM instrument where id = ${id} and occupied = 1`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            callback(null, err);
+            return;
+        }
+        console.log("device: ", res);
+        callback(null, res);
+    });
+}
+
+const getAvailableDevices = (callback) => {
+    sql.query(`SELECT * FROM instrument where enable = 0 and occupied = 0`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            callback(null, err);
+            return;
+        }
+        console.log("device: ", res);
+        callback(null, res);
+    });
+}
+
+const deviceNum = (callback) => {
+    sql.query(`SELECT COUNT(*) FROM instrument`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            callback(null, err);
+            return;
+        }
+        console.log("device: ", res);
+        callback(null, res);
+    });
+}
+
+const freeDevice = (id, callback) => {
+    sql.query(`UPDATE instrument SET occupied = 1 WHERE id = ${id}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            callback(null, err);
+            return;
+        }
+        console.log("device: ", res);
+        callback(null, res);
+    });
+}
 
 module.exports = {
     Device,
@@ -78,5 +125,8 @@ module.exports = {
     editDevice,
     delDevice,
     getDevice,
-    getAllDevice
+    getAllDevice,
+    deviceNum,
+    getAvailableDevices,
+    freeDevice,
 }

@@ -13,7 +13,7 @@
         <div class="mx-auto text-center col-lg-5">
           <h1 class="mt-5 mb-2 text-white">Welcome!</h1>
           <p class="text-white text-lead">
-            Use your StudentID, Name, Email and password
+            Use your Internal ID, Name, Email and password
             to create an acoount.
           </p>
         </div>
@@ -26,10 +26,10 @@
         <div class="card z-index-0">
           <div class="pt-4 text-center card-header">
             <h5>Register</h5>
-            <h6 class="text-info">You need your email and password to login after</h6>
+            <h6 class="text-info">You need your InternalID and password to login after</h6>
           </div>
           <div class="card-body">
-            <form role="form" action="http://localhost:4000/api/user/signup" method="post">
+            <form role="form">
               <div class="mb-3">
                 <vsud-input
                   id="name"
@@ -43,7 +43,7 @@
                 <vsud-input
                     id="s_id"
                     type="text"
-                    placeholder="Student ID"
+                    placeholder="Internal ID"
                     name="s_id"
                     aria-label="S_id"
                 />
@@ -73,6 +73,8 @@
                   full-width
                   variant="gradient"
                   class="my-4 mb-2"
+                  type="button"
+                  @Click="signup()"
                   >Sign up</vsud-button
                 >
               </div>
@@ -101,6 +103,7 @@ import VsudInput from "@/components/VsudInput.vue";
 import VsudButton from "@/components/VsudButton.vue";
 
 import { mapMutations } from "vuex";
+import axios from "axios";
 
 export default {
   name: "SignupBasic",
@@ -120,6 +123,30 @@ export default {
   },
   methods: {
     ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
+    signup() {
+      let s_id = document.getElementById("s_id").value;
+      let password = document.getElementById("password").value;
+      let email = document.getElementById("email").value;
+      let name = document.getElementById("name").value;
+      console.log(s_id, password)
+      const url = "http://localhost:4000/api/user/signup";
+      try {
+        const req = axios.post(url, `s_id=${s_id}&password=${password}&email=${email}&name=${name}`).then(response => {
+          console.log(req + response.data);
+          if (response.data.status === 0) {
+            this.$store.commit("setUser", response.data);
+            this.$store.commit("token", response.data.token);
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("user", JSON.stringify(response.data));
+            this.$router.push({ name: "Dashboard" });
+          } else {
+            alert("Sign up failed");
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
   },
 };
 </script>

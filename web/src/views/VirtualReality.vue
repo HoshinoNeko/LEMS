@@ -69,7 +69,7 @@
             <div class="col-lg-8 col-md-11">
               <div class="d-flex">
                 <div class="me-auto">
-                  <h1 class="mb-0 display-1 font-weight-bold mt-n4">28°C</h1>
+                  <h1 class="mb-0 display-1 font-weight-bold mt-n4">{{ temp }}°C</h1>
                   <h6 class="mb-0 text-uppercase ms-1">Cloudy</h6>
                 </div>
                 <div class="ms-auto">
@@ -178,6 +178,7 @@ export default {
       image2,
       image3,
       image4,
+      temp: 23,
     };
   },
   computed: {
@@ -185,6 +186,7 @@ export default {
   },
   mounted() {
     setTooltip(this.$store.state.bootstrap);
+    this.temp = Math.floor(Math.random() * (30 - 20) + 20);
   },
   beforeMount() {
     this.$store.state.showNavbar = false;

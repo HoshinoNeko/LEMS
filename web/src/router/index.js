@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "@/views/Dashboard.vue";
-import Tables from "@/views/Tables.vue";
+import Users from "@/views/Users.vue";
+import Instruments from "@/views/Instruments.vue";
+import Incidents from "@/views/Incidents.vue";
+import Returns from "@/views/Returns.vue";
+import ReturnApprovals from "@/views/ReturnApprovals.vue";
+import Rents from "@/views/Rents.vue";
 import Billing from "@/views/Billing.vue";
 import VirtualReality from "@/views/VirtualReality.vue";
 import Profile from "@/views/Profile.vue";
@@ -20,9 +25,34 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: "/tables",
-    name: "Tables",
-    component: Tables,
+    path: "/users",
+    name: "Users",
+    component: Users,
+  },
+  {
+    path: "/instrument",
+    name: "Instruments",
+    component: Instruments,
+  },
+  {
+    path: "/incident",
+    name: "Incidents",
+    component: Incidents,
+  },
+  {
+    path: "/return",
+    name: "Returns",
+    component: Returns,
+  },
+  {
+    path: "/returnApproval",
+    name: "ReturnApprovals",
+    component: ReturnApprovals,
+  },
+  {
+    path: "/rent",
+    name: "Rents",
+    component: Rents,
   },
   {
     path: "/billing",

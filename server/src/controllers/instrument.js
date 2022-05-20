@@ -38,7 +38,7 @@ const getAllInstruments = (req, res) => {
 }
 
 const editInstrument = (req, res) => {
-    Instrument.editDevice(req.params.id, req.body, (err, instrument) => {
+    Instrument.editDevice(req.params.id, req.body.name, req.body.symbol, req.body.location, req.body.instruction, req.body.enable, req.body.remark, req.body.add_date, req.body.department, (err, instrument) => {
         if (err) {
             res.json({
                 success: 1,
@@ -55,7 +55,7 @@ const editInstrument = (req, res) => {
 }
 
 const addInstrument = (req, res) => {
-    Instrument.newDevice(req.body, (err, instrument) => {
+    Instrument.newDevice(req.body.name, req.body.symbol, req.body.location, req.body.instruction, req.body.enable, req.body.remark, req.body.department, (err, instrument) => {
         if (err) {
             res.json({
                 success: 1,
@@ -87,10 +87,45 @@ const deleteInstrument = (req, res) => {
     });
 }
 
+const getAvailable = (req, res) => {
+    Instrument.getAvailableDevices((err, instruments) => {
+        if (err) {
+            res.json({
+                status: 1,
+                msg: 'Failed to get instruments'
+            });
+        } else {
+            res.json({
+                status: 0,
+                instruments: instruments
+            });
+        }
+    });
+}
+
+const freeDevice = (id, res) => {
+    Instrument.freeDevice(id, (err, instrument) => {
+        if (err) {
+            res.json({
+                status: 1,
+                msg: 'Failed to free instrument'
+            });
+        } else {
+            res.json({
+                status: 0,
+                msg: 'Instrument freed',
+                instrument: instrument
+            });
+        }
+    });
+}
+
 module.exports = {
     getInstrument,
     getAllInstruments,
     editInstrument,
     addInstrument,
-    deleteInstrument
+    deleteInstrument,
+    getAvailable,
+    freeDevice
 }

@@ -21,11 +21,12 @@ const login = (req, res) => {
                 message: "email or s_id can not be both empty"
             })
         } else {
-            if (user) {
-                console.log(user)
+            console.log(user)
+            console.log(JSON.stringify(user))
+            if (JSON.stringify(user) !== '[]') {
                 if (user[0].password === md5(req.body.password)) {
                     const token = 'Bearer ' + jwt.sign(
-                        { id: user[0].id, passwd: user[0].password, role: user[0].role },
+                        { id: user[0].id, passwd: user[0].password, role: user[0].role, email: user[0].email, s_id: user[0].s_id, sname: user[0].sname },
                         config.system.secret,
                         { expiresIn: '24h' },
                         { algorithm: 'RS256' }
@@ -34,6 +35,7 @@ const login = (req, res) => {
                         status: 0,
                         message: "login success",
                         token: token,
+                        id: user[0].id,
                         name: user[0].name,
                         email: user[0].email,
                         reg_date: user[0].reg_date
@@ -129,6 +131,19 @@ const addUser = (req, res) => {
     });
 }
 
+const addUserInAdmin = (req, res) => {
+    User.createInAdmin([req.body.name, req.body.email, req.body.s_id, req.body.role, md5(req.body.password)], (err, user) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).send({
+                status: 0,
+                message: "user create success"
+            });
+        }
+    });
+}
+
 const delUser = (req, res) => {
     User.deleteOne(req.body.id, (err, user) => {
         if (err) {
@@ -202,14 +217,14 @@ const updateUser = (req, res) => {
 }
 
 const findOne = (req, res) => {
-    if (!req.body.id && !req.params.id && !req.decoded.id) {
+    if (!req.body.id && !req.params.id) {
         res.status(400).send({
             status: 1,
             message: "argument not enough or null"
         });
     } else {
-        let id = req.decoded.id || req.body.id || req.params.id
-        User.findOne(this.id, (err, user) => {
+        let id = req.decoded.id || req.body.id
+        User.findByID(id, (err, user) => {
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -221,6 +236,34 @@ const findOne = (req, res) => {
             }
         });
     }
+}
+
+const banOne = (req, res) => {
+    let id = req.body.id || req.params.id;
+    User.banOne(id, (err, user) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).send({
+                status: 0,
+                message: "User banned"
+            })
+        }
+    })
+}
+
+const unBanOne = (req, res) => {
+    let id = req.body.id || req.params.id;
+    User.unbanOne(id, (err, user) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).send({
+                status: 0,
+                message: "User banned"
+            })
+        }
+    })
 }
 
 const test = (req, res) => {
@@ -236,5 +279,8 @@ module.exports = {
     addUser,
     delUser,
     updateUser,
-    updatePW
+    updatePW,
+    addUserInAdmin,
+    banOne,
+    unBanOne,
 };

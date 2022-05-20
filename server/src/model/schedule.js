@@ -1,18 +1,7 @@
 const sql = require('./db.js')
 
-const newSchedule = (user_id, instrument_id, duration, callback) => {
+const newSchedule = (user_id, instrument_id, duration, remark, callback) => {
     if (user_id && instrument_id && duration) {
-        sql.query(`INSERT INTO schedule (user_id, instrument_id, duration) VALUES (${user_id}, ${instrument_id}, ${duration})`, (err, res) => {
-            if (err) {
-                console.log("error: ", err)
-                callback(err, null)
-            } else {
-                callback(null, res)
-            }
-        })
-    } else {
-        callback(null, null)
-    }
     sql.query(`INSERT INTO schedule (user_id, instrument_id, rent_date, duration, remark) VALUES (${user_id}, ${instrument_id}, now(), ${duration}, ${remark})`, (err, res) => {
         if (err) {
             callback({
@@ -35,10 +24,21 @@ const newSchedule = (user_id, instrument_id, duration, callback) => {
             })
         }
     })
+}}
+
+const getAll = (callback) => {
+    sql.query('SELECT * FROM schedule', (err, res) => {
+        if (err) {
+            console.log("error: ", err)
+            callback(err, null)
+        } else {
+            callback(null, res)
+        }
+    })
 }
 
 const getByUser = (user_id, callback) => {
-    sql.query(`SELECT * FROM schedule WHERE user_id = ${user_id}`, (err, res) => {
+    sql.query(`SELECT * FROM schedule WHERE user_id = ${user_id} ORDER BY rent_date DESC`, (err, res) => {
         if (err) {
             callback({
                 status: 1,
@@ -72,5 +72,8 @@ const getByDevice = (instrument_id, callback) => {
 }
 
 module.exports = {
-
+    newSchedule,
+    getAll,
+    getByUser,
+    getByDevice
 }

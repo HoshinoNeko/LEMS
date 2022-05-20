@@ -45,8 +45,39 @@ const create = (name,email,sid,password, callback) => {
     })
 }
 
+const createInAdmin = (name,email,sid, role,password, callback) => {
+
+    sql.query('INSERT INTO user SET sname = ?, email = ?, s_id = ?, role = ?, password = ?', [name, email, sid, role, password], (err, res) => {
+        if (err.errno === 1062) {
+            callback(err, "user already exists")
+        } else {
+            callback(err, res)
+        }
+    })
+}
+
 const deleteOne = (id, callback) => {
     sql.query('DELETE FROM user WHERE id = ?', id, (err, res) => {
+        if (err) {
+            callback(err, null)
+        } else {
+            callback(null, res)
+        }
+    })
+}
+
+const banOne = (id, callback) => {
+    sql.query('UPDATE user set enable = 1 where id = ?', id, (err, res) => {
+      if (err) {
+          callback(err, null)
+      } else {
+          callback(null, res)
+      }
+    })
+}
+
+const unbanOne = (id, callback) => {
+    sql.query('UPDATE user set enable = 0 where id = ?', id, (err, res) => {
         if (err) {
             callback(err, null)
         } else {
@@ -65,10 +96,30 @@ const updatePW = (id, password, callback) => {
     })
 }
 
+const findByID = (id, callback) => {
+    sql.query('SELECT * FROM user WHERE id = ?', id, (err, res) => {
+        if (err) {
+            callback(err, null)
+        } else {
+            callback(null, res)
+        }
+    })
+}
+
 const updateOne = (id, s_id,  sname, email, password , enable, role, remark, callback) => {
-    sql.query('UPDATE user SET sname = ?, email = ?, s_id = ?, password = ?, enable = ?, role = ?, remark = ? WHERE id = ?', sname, email, s_id, password, enable , role, remark, id, (err, res) => {
+    sql.query('UPDATE user SET sname = ?, email = ?, s_id = ?, password = ?, enable = ?, role = ?, remark = ? WHERE id = ?', [sname, email, s_id, password, enable , role, remark, id], (err, res) => {
         if (err) {
             callback(err, 'User with id ' + id + ' not found')
+        } else {
+            callback(null, res)
+        }
+    })
+}
+
+const userNum = (callback) => {
+    sql.query('SELECT COUNT(*) AS num FROM user', (err, res) => {
+        if (err) {
+            callback(err, null)
         } else {
             callback(null, res)
         }
@@ -79,7 +130,12 @@ module.exports = {
     findOne,
     getAll,
     create,
+    createInAdmin,
     deleteOne,
     updatePW,
-    updateOne
+    updateOne,
+    findByID,
+    userNum,
+    banOne,
+    unbanOne,
 };
