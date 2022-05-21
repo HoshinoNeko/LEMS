@@ -35,7 +35,7 @@
                   <div class="d-flex flex-column justify-content-center">
                     <h6 class="mb-0 text-sm"> Return: {{ l.id }} </h6>
                     <p class="text-xs text-secondary mb-0">
-                      Device: {{ l.i_id }}
+                      Device: {{ l.instrument_id }}
                     </p>
                   </div>
                 </div>
@@ -52,15 +52,15 @@
                   > {{ l.add_date }} </span
                 >
               </td>
-              <td class="align-middle">
-                <a-popconfirm title="Agree?" @confirm="agree(l.id)" @cancel="cancel">
-                  <a-button success size="sm" class="text-success">Agree</a-button
+              <td class="align-middle text-center">
+                <a-popconfirm title="Agree?" @confirm="agree(l.id,l.i_id)" @cancel="cancel">
+                  <a-button success size="sm" class="text-success">Approve</a-button
                   ></a-popconfirm
                 >
               </td>
-              <td class="align-middle">
+              <td class="align-middle text-center">
                 <a-popconfirm title="Reject?" @confirm="reject(l.id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Delete</a-button
+                  <a-button danger size="sm" class="text-danger">Reject</a-button
                 ></a-popconfirm
                 >
               </td>
@@ -188,9 +188,9 @@ export default {
     };
   },
   methods: {
-    agree(id) {
+    agree(id, i_id) {
       const token = localStorage.getItem("token");
-      axios.post(`http://localhost:4000/api/return/${id}/approve` , [], {
+      axios.post(`http://localhost:4000/api/return/${id}/approve` , `i_id=${i_id}`, {
         headers: {
           Authorization: `${token}`
         }

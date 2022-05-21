@@ -12,14 +12,14 @@
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="Users" :to="{ name: 'Users' }">
+        <sidenav-collapse v-if="isAdmin()" navText="Users" :to="{ name: 'Users' }">
           <template #icon>
             <office />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="Intruments" :to="{ name: 'Instruments' }">
+        <sidenav-collapse v-if="isAdmin()" navText="Intruments" :to="{ name: 'Instruments' }">
           <template #icon>
             <office />
           </template>
@@ -47,7 +47,21 @@
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="ReturnApprovals" :to="{ name: 'ReturnApprovals' }">
+        <sidenav-collapse v-if="isAdmin()" navText="ReturnApprovals" :to="{ name: 'ReturnApprovals' }">
+          <template #icon>
+            <office />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
+        <sidenav-collapse navText="Announcement" :to="{ name: 'Notices' }">
+          <template #icon>
+            <office />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
+        <sidenav-collapse v-if="isAdmin()" navText="Manage Announcement" :to="{ name: 'NoticesAdmin' }">
           <template #icon>
             <office />
           </template>
@@ -92,21 +106,28 @@
         </h6>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="Profile" :to="{ name: 'Profile' }">
+        <sidenav-collapse v-if="isAdmin()" navText="Profile" :to="{ name: 'Profile' }">
           <template #icon>
             <customer-support />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="Sign In" :to="{ name: 'Sign In' }">
+        <sidenav-collapse v-if="!isLogin()" navText="Sign In" :to="{ name: 'Sign In' }">
           <template #icon>
             <document />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="Sign Up" :to="{ name: 'Sign Up' }">
+        <sidenav-collapse v-if="!isLogin()" navText="Sign Up" :to="{ name: 'Sign Up' }">
+          <template #icon>
+            <spaceship />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
+        <sidenav-collapse onclick="logout()" navText="Logout" :to="{ name: 'Sign In' }">
           <template #icon>
             <spaceship />
           </template>
@@ -166,6 +187,30 @@ export default {
       const routeArr = this.$route.path.split("/");
       return routeArr[1];
     },
+    isLogin() {
+      return localStorage.getItem("user");
+    },
+    isAdmin() {
+      let userInfo = localStorage.getItem("user")
+      if (!userInfo) {
+        console.log("Not logined")
+        return false
+      } else {
+        let userRole = JSON.parse(userInfo).role
+        console.log(JSON.parse(userInfo))
+        console.log("role"+userRole)
+        if ( userRole > 0) {
+          console.log("Admin welcome")
+          return true
+        } else {
+          console.log("Normal User")
+        }
+      }
+    },
+    logout() {
+      localStorage.clear()
+      this.$router.push({ name: "SignIn" });
+    }
   },
 };
 </script>

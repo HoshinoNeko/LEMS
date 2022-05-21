@@ -2,24 +2,16 @@ const sql = require('./db.js')
 
 const newSchedule = (user_id, instrument_id, duration, remark, callback) => {
     if (user_id && instrument_id && duration) {
+        remark = '"' + remark + '"'
     sql.query(`INSERT INTO schedule (user_id, instrument_id, rent_date, duration, remark) VALUES (${user_id}, ${instrument_id}, now(), ${duration}, ${remark})`, (err, res) => {
         if (err) {
-            callback({
-                status: 1,
-                message: 'Error: ' + err
-            })
+            callback(err)
         } else {
-            sql.query(`update instrument set occupied = 0 where id = ${instrument_id}`, (err, res) => {
+            sql.query(`update instrument set occupied = 1 where id = ${instrument_id}`, (err, res) => {
                 if (err) {
-                    callback({
-                        status: 1,
-                        message: 'Error: ' + err
-                    })
+                    callback(err)
                 } else {
-                    callback({
-                        status: 0,
-                        message: 'Success'
-                    })
+                    callback(null,res)
                 }
             })
         }

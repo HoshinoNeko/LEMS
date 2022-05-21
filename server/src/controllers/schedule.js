@@ -9,8 +9,9 @@ const getScheduleByUserID = (req, res) => {
     Schedule.getByUser(req.params.id, (err, schedule) => {
         if (err) {
             res.send(err);
+            return
         }
-        res.json(schedule);
+        res.send(schedule);
     });
 }
 

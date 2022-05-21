@@ -38,6 +38,7 @@ const login = (req, res) => {
                         id: user[0].id,
                         name: user[0].name,
                         email: user[0].email,
+                        role: user[0].role,
                         reg_date: user[0].reg_date
                     });
                 } else {
@@ -90,6 +91,7 @@ const signup = (req, res) => {
                                     token: token,
                                     name: user[0].name,
                                     email: user[0].email,
+                                    role: user[0].role,
                                     reg_date: user[0].reg_date
                                 });
                             })
@@ -132,7 +134,8 @@ const addUser = (req, res) => {
 }
 
 const addUserInAdmin = (req, res) => {
-    User.createInAdmin([req.body.name, req.body.email, req.body.s_id, req.body.role, md5(req.body.password)], (err, user) => {
+    User.createInAdmin(req.body.name, req.body.email, req.body.s_id, req.body.role, md5(req.body.password), (err, user) => {
+        console.log(req.body.name, req.body.email, req.body.s_id, req.body.role, md5(req.body.password))
         if (err) {
             res.status(500).send(err);
         } else {

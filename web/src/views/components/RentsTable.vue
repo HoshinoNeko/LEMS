@@ -55,42 +55,37 @@
               <td>
                 <p class="text-xs font-weight-bold mb-0">{{l.instruction}}</p>
               </td>
-              <td class="align-middle">
+              <td class="align-middle text-center">
                 <a-button type="primary" @click="showEdit(l.id)">Rent</a-button>
-              </td>
-              <td class="align-middle">
-                <a-popconfirm title="确认删除吗" @confirm="deleteUser(l.id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Delete</a-button
-                ></a-popconfirm
-                >
               </td>
             </tr>
           </tbody>
           <a-modal
               class="text-secondary font-weight-bold text-xs"
               v-model:visible="editvisible"
-              title="Modal"
+              title="Rent Device"
               ok-text="Apply"
               cancel-text="Cancel"
               @ok="hideEdit()"
           >
-            <form>
-              <span class="form-label-text" style="display: block;">Rent devices</span>
-              <span class="form-label-text" style="display: block;">Duration</span>
-              <input
+            <a-form-item class="ant-form ant-form-vertical">
+              <span class="form-label-text" style="display: block;">Duration(by day)</span>
+              <a-textarea
                   type="number"
                   id="editduration"
-                  class="form-input"
-                  placeholder="Number of days"
-              >
+                  placeholder="7"
+                  class="ant-col ant-form-item-control"
+                  style="width: 100%;"
+              />
               <span class="form-label-text" style="display: block;">Remark</span>
-              <input
-                  type="number"
+              <a-textarea
+                  type="text"
                   id="editremark"
-                  class="form-input"
+                  class="form-input textarea"
+                  style="width: 100%;"
                   placeholder="Remark"
-              >
-            </form>
+              />
+            </a-form-item>
           </a-modal>
         </table>
       </div>
@@ -256,6 +251,23 @@ export default {
         return "Admin";
       } else {
         return "user";
+      }
+    },
+    isAdmin() {
+      let userInfo = localStorage.getItem("user")
+      if (!userInfo) {
+        console.log("Not logined")
+        return false
+      } else {
+        let userRole = JSON.parse(userInfo).role
+        console.log(JSON.parse(userInfo))
+        console.log("role"+userRole)
+        if ( userRole > 0) {
+          console.log("Admin welcome")
+          return true
+        } else {
+          console.log("Normal User")
+        }
       }
     },
     load() {

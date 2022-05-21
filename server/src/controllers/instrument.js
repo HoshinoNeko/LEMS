@@ -103,6 +103,40 @@ const getAvailable = (req, res) => {
     });
 }
 
+const disableDevice = (req, res) => {
+    Instrument.disableDevice(req.params.id, (err,result) => {
+        if (err) {
+            res.json({
+                status: 1,
+                message: err
+            })
+        } else {
+            res.json({
+                status: 0,
+                message: "OK",
+                data: result
+            })
+        }
+    })
+}
+
+const enableDevice = (req, res) => {
+    Instrument.enableDevice(req.params.id, (err,result) => {
+        if (err) {
+            res.json({
+                status: 1,
+                message: err
+            })
+        } else {
+            res.json({
+                status: 0,
+                message: "OK",
+                data: result
+            })
+        }
+    })
+}
+
 const freeDevice = (id, res) => {
     Instrument.freeDevice(id, (err, instrument) => {
         if (err) {
@@ -127,5 +161,7 @@ module.exports = {
     addInstrument,
     deleteInstrument,
     getAvailable,
-    freeDevice
+    freeDevice,
+    disableDevice,
+    enableDevice,
 }

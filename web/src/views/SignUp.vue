@@ -42,7 +42,7 @@
               <div class="mb-3">
                 <vsud-input
                     id="s_id"
-                    type="text"
+                    type="number"
                     placeholder="Internal ID"
                     name="s_id"
                     aria-label="S_id"

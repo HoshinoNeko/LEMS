@@ -69,6 +69,7 @@ drop table if exists schedule; create table schedule
                                    user_id  int                              null comment 'User ID',
                                    instrument_id  int                              null comment 'Instrument ID',
                                    rent_date datetime    default now()    not null comment 'Rent date',
+                                   done   tinyint(1)     default 1     not null comment 'Schedule is done',
                                    duration int                              not null comment 'Rent Duration',
                                    remark   varchar(512)                     null comment 'Remark',
                                    constraint schedule_pk
@@ -77,3 +78,15 @@ drop table if exists schedule; create table schedule
                                        foreign key (instrument_id) references instrument(id)
                                )
     comment 'Schedule table';
+drop table if exists announcement; create table announcement
+                               (
+                                   id        int not null auto_increment comment 'Announcement ID',
+                                   user_id   int       null comment 'User ID',
+                                   title     text      null comment 'Announcement title',
+                                   content   text      null comment 'Announcement content',
+                                   add_date  datetime   default current_timestamp not null comment 'Announcement Add date',
+                                   constraint announcement_pk
+                                       primary key (id),
+                                       foreign key (user_id) references user(id)
+                               )
+    comment 'Announcement table';

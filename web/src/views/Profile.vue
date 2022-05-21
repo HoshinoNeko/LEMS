@@ -23,8 +23,8 @@
         </div>
         <div class="col-auto my-auto">
           <div class="h-100">
-            <h5 class="mb-1">{{ name }}</h5>
-            <p class="mb-0 text-sm font-weight-bold"> {{email}} </p>
+            <h5 class="mb-1">{{ email }}</h5>
+            <p class="mb-0 text-sm font-weight-bold"> {{reg_date}} </p>
           </div>
         </div>
       </div>
@@ -161,9 +161,10 @@ export default {
       faTwitter,
       faInstagram,
       data: {
-        name: "Sophie",
-        email: ""
-      }
+        email: "",
+        reg_date:  "2022-01-01",
+        id: 0,
+      },
     };
   },
 
@@ -174,6 +175,7 @@ export default {
   },
   created() {
     this.load()
+    this.loadInfo()
   },
   beforeUnmount() {
     this.$store.state.isAbsolute = false;
@@ -181,7 +183,16 @@ export default {
   methods: {
     load() {
       this.$store.dispatch('loadUser', this.data)
-    }
+    },
+    loadInfo() {
+      let userInfo = localStorage.getItem("user")
+      if (userInfo) {
+        console.log("Not logined")
+        this.email = JSON.parse(userInfo).email
+        this.id = JSON.parse(userInfo).id
+        this.reg_date = JSON.parse(userInfo).reg_date
+      }
+    },
   }
 };
 </script>

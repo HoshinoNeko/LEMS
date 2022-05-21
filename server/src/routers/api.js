@@ -6,6 +6,7 @@ const instrument = require('./instrument')
 const rent = require('./rent')
 const ireturn = require('./ireturn')
 const incident = require('./incident')
+const announcement = require('./announcement')
 const jwt = require("jsonwebtoken");
 const fs = require('fs');
 const path = require("path");
@@ -15,7 +16,7 @@ router.use(
     (req, res, next) => {
         let token = req.headers.authorization;
         console.log(`Token: ${token}`)
-        if ( req.path === "/user/login" || req.path === "/user/signup" || req.path === "/instrument" ) {
+        if ( req.path === "/user/login" || req.path === "/user/signup" ) {
             next();
         } else {
             if (token) {
@@ -24,17 +25,16 @@ router.use(
                 }
                 jwt.verify(token, config.system.secret, (err, decoded) => {
                     if (err) {
-                        res.json({
-                            code: -1,
-                            msg: 'token Authorization failed'
+                        return res.status(401).json({
+                            status: 1,
+                            message: 'token Authorization failed'
                         })
                     } else {
                         req.decoded = decoded;
-                        console.log(decoded.id, decoded.exp)
                         if ( req.path === "/user") {
-                            res.send({
+                            res.status(200).send({
                                 code: 0,
-                                msg: 'token ok',
+                                message: 'token ok',
                                 id: decoded.id,
                                 email: decoded.email,
                                 role: decoded.role,
@@ -46,9 +46,9 @@ router.use(
                     }
                 })
             } else {
-                res.json({
-                    code: -1,
-                    msg: 'token no exist'
+                return res.status(401).json({
+                    status: 1,
+                    message: 'Token not exist'
                 })
             }
         }
@@ -56,6 +56,7 @@ router.use(
 )
 router.use('/user', user)
 router.use('/instrument', instrument)
+router.use('/announcement', announcement)
 router.use('/rent', rent)
 router.use('/return', ireturn)
 router.use('/incident', incident)

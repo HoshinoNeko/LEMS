@@ -44,17 +44,16 @@ const create = (name,email,sid,password, callback) => {
         }
     })
 }
-
-const createInAdmin = (name,email,sid, role,password, callback) => {
-
+const createInAdmin = (name,email,sid,role,password, callback) => {
     sql.query('INSERT INTO user SET sname = ?, email = ?, s_id = ?, role = ?, password = ?', [name, email, sid, role, password], (err, res) => {
-        if (err.errno === 1062) {
+        if (err) {
             callback(err, "user already exists")
         } else {
             callback(err, res)
         }
     })
 }
+
 
 const deleteOne = (id, callback) => {
     sql.query('DELETE FROM user WHERE id = ?', id, (err, res) => {

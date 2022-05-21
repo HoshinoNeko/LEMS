@@ -10,12 +10,12 @@ const addReturn = (req, res) => {
         if (err) {
             res.json({
                 status: 1,
-                msg: err
+                message: err
             });
         } else {
             res.json({
                 status: 0,
-                msg: data
+                message: data
             });
         }
     });
@@ -26,7 +26,7 @@ const getAllReturn = (req, res) => {
         if (err) {
             res.json({
                 status: 1,
-                msg: err
+                message: err
             });
         } else {
             res.json({
@@ -41,44 +41,28 @@ const getReturnByID = (req, res) => {
     ireturn.getReturnByID(req.params.id, (err, data) => {
         if (err) {
             res.json({
-                success: false,
-                msg: err
+                status: 1,
+                message: err
             });
         } else {
             res.json({
-                success: true,
-                msg: data
+                status: 0,
+                message: data
             });
         }
     });
 }
 
 const approveReturn = (req, res) => {
-    ireturn.approveReturn(req.params.id, (err, data) => {
+    ireturn.approveReturn(req.params.id, req.body.i_id, (err, data) => {
         if (err) {
             res.json({
-                success: false,
-                msg: err
-            });
-        } else {
-            res.json({
-                success: true,
-                msg: data
+                status: 1,
+                message: err,
+                data: data
             });
         }
-    });
-    instrument.freeDevice(req.params.id, (err, data) => {
-        if (err) {
-            res.json({
-                success: false,
-                msg: err
-            });
-        } else {
-            res.json({
-                success: true,
-                msg: data
-            });
-        }
+        res.json({status: 0, message: "ok"})
     });
 }
 
@@ -87,7 +71,7 @@ const getUndoneReturn = (req, res) => {
         if (err) {
             res.json({
                 status: 1,
-                msg: err
+                message: err
             });
         } else {
             res.json({

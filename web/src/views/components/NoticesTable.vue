@@ -1,68 +1,19 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6>Return table</h6>
+      <h6 style="display: inline-block;">Notice table</h6>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
-        <table class="table align-items-center mb-0">
-          <thead>
-            <tr>
-              <th
-                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-              >
-                Device / Return ID
-              </th>
-              <th
-                  class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-              >
-                Duration By day
-              </th>
-              <th
-                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-              >
-                Add at
-              </th>
-              <th class="text-secondary opacity-7"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="l in instruments" v-bind:key="l.id">
-              <td>
-                <div class="d-flex px-2 py-1">
-                  <div class="d-flex flex-column justify-content-center">
-                    <h6 class="mb-0 text-sm"> Device ID: {{ l.instrument_id }} </h6>
-                    <p class="text-xs text-secondary mb-0">
-                      Return ID: {{ l.id }}
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <p class="text-xs font-weight-bold mb-0" style="text-align: center;">{{l.duration}}</p>
-              </td>
-
-              <td class="align-middle text-center">
-                <span class="text-secondary text-xs font-weight-bold"
-                  > {{ l.rent_date }} </span
-                >
-              </td>
-
-              <td class="align-middle text-center"  v-if="l.done===1">
-                <a-popconfirm title="Sure?" @confirm="deleteUser(l.instrument_id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Return</a-button
-                ></a-popconfirm
-                >
-              </td>
-              <td class="align-middle text-center"  v-else>
-                <a>
-                  <a-button success size="sm" class="text-success">Done</a-button
-                  ></a
-                >
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <a-list-item v-for="item in data" v-bind:key="item.id" style="padding: 1.5rem;" :bordered="true">
+          <a-list-item-meta
+              :description=item.content
+          >
+            <template #title>
+              <p>{{ item.title }}</p>
+            </template>
+          </a-list-item-meta>
+        </a-list-item>
       </div>
     </div>
   </div>
@@ -80,7 +31,7 @@ import axios from "axios";
 import {ref} from "vue";
 import Modal from 'ant-design-vue';
 export default {
-  name: "returns-table",
+  name: "notices-table",
   data() {
     return {
       img1,
@@ -89,7 +40,7 @@ export default {
       img4,
       img5,
       img6,
-      instruments: [],
+      data: [],
     };
   },
   created() {
@@ -109,21 +60,19 @@ export default {
     };
 
     const hideModal = () => {
-      const url = "http://localhost:4000/api/instrument/add";
+      const url = "http://localhost:4000/api/announcement/new";
       const token = localStorage.getItem("token");
-      const addname = document.getElementById("addName").value;
-      const addsymbol = document.getElementById("addSymbol").value;
-      const addlocation = document.getElementById("addLocation").value;
-      const addinstruction = document.getElementById("addInstruction").value;
-      const addenable = document.getElementById("addEnable").value;
-      const addremark = document.getElementById("addRemark").value;
-
-      axios.post(url, `name=${addname}&symbol=${addsymbol}&location=${addlocation}&instruction=${addinstruction}&enable=${addenable}&remark=${addremark}`, {
+      const userinfo = localStorage.getItem("user");
+      const adduid = JSON.parse(userinfo).id;
+      const addiid = document.getElementById("addiid").value;
+      const addtitle = document.getElementById("addtitle").value;
+      const addcontent = document.getElementById("addcontent").value;
+      axios.post(url, `uid=${adduid}&iid=${addiid}&title=${addtitle}&content=${addcontent}`, {
         headers: {
           Authorization: `${token}`
         }
       }).then(res => {
-        if (res.data.success === 0) {
+        if (res.data.status === 0) {
           message.success(res.data.msg);
           this.load();
         } else {
@@ -171,39 +120,48 @@ export default {
       });
     };
 
+    const editconfirm = () => {
+      Modal.editconfirm({
+        title: 'editconfirm',
+        content: 'Bla bla ...',
+        okText: '确认',
+        cancelText: '取消',
+      });
+    };
     return {
       cancel,
       visible,
       showModal,
       hideModal,
       confirm,
+      editvisible,
       showEdit,
       hideEdit,
+      editconfirm,
     };
   },
   methods: {
     deleteUser(id) {
       const token = localStorage.getItem("token");
-      const userinfo = localStorage.getItem("user");
-      const adduid = JSON.parse(userinfo).id;
-      axios.post(`http://localhost:4000/api/return/add`, `s_id=${adduid}&i_id=${id}`, {
+      axios.get(`http://localhost:4000/api/incident/${id}/approval`, {
         headers: {
           Authorization: `${token}`
         }
       }).then(res => {
         if (res.data.status === 0) {
-          message.success(res.data.msg);
+          message.success(res.data.message);
           this.load();
         } else {
-          message.error(res.data.msg);
+          message.error(res.data.message);
+          this.load();
         }
       });
     },
     statusCheck(status) {
       if (status === 1) {
-        return "Disabled";
+        return "Undone";
       } else {
-        return "Enabled";
+        return "Done";
       }
     },
     statusCheckClass(status) {
@@ -221,22 +179,20 @@ export default {
       }
     },
     load() {
-      const userinfo = localStorage.getItem("user");
-      const adduid = JSON.parse(userinfo).id;
-      const url = "http://localhost:4000/api/rent/";
+      const url = "http://localhost:4000/api/announcement";
       const token = localStorage.getItem("token");
       if (!token) {
         message.error('You are not login');
         this.$router.push({ name: "Sign In" });
       } else {
         axios
-          .get(url+adduid, {
+          .get(url, {
             headers: {
               Authorization: ` ${token}`
             }
           })
           .then(response => {
-            this.instruments = response.data.data;
+            this.data = response.data.data;
           })
           .catch(error => {
             console.log(error);

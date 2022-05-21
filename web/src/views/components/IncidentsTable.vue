@@ -1,8 +1,8 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6>Incident table</h6>
-      <a-button type="primary" @click="showModal">New Incident</a-button>
+      <h6 style="display: inline-block;">Incidents table</h6>
+      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">New Incident</a-button>
       <a-modal
           v-model:visible="visible"
           title="New Incident"
@@ -10,29 +10,32 @@
           cancel-text="Cancel"
           @ok="hideModal"
       >
-        <form class="ant-form ant-form-vertical">
-        <span class="form-label-text" style="display: block;">Instrument ID</span>
-        <input
-            type="text"
-            id="addiid"
-            placeholder="ID"
-            class="ant-col ant-form-item-control"
-        >
-        <span class="form-label-text" style="display: block;">Title</span>
-        <input
-            type="text"
-            id="addtitle"
-            class="form-input"
-            placeholder="Title"
-        >
+        <a-form-item class="ant-form ant-form-vertical">
+          <span class="form-label-text" style="display: block;">Instrument ID</span>
+          <a-textarea
+              type="number"
+              id="addiid"
+              placeholder="Instrument ID"
+              class="ant-col ant-form-item-control"
+              style="width: 100%;"
+          />
+          <span class="form-label-text" style="display: block;">Title</span>
+          <a-textarea
+              type="text"
+              id="addtitle"
+              class="form-input textarea"
+              style="width: 100%;"
+              placeholder="Title"
+          />
           <span class="form-label-text" style="display: block;">Content</span>
-          <input
+          <a-textarea
               type="text"
               id="addcontent"
-              class="form-input"
+              class="form-input textarea"
+              style="width: 100%;"
               placeholder="Content"
-          >
-        </form>
+          />
+        </a-form-item>
       </a-modal>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
@@ -66,7 +69,7 @@
                 Add at
               </th>
               <th class="text-secondary opacity-7"></th>
-              <th class="text-secondary opacity-7"></th>
+              <th class="text-secondary opacity-7" v-if="isAdmin()"></th>
             </tr>
           </thead>
           <tbody>
@@ -105,7 +108,7 @@
                 <a-button type="primary" @click="showEdit(l.id)">Edit</a-button>
               </td>
               -->
-              <td class="align-middle">
+              <td class="align-middle text-center" v-if="isAdmin()">
                 <a-popconfirm title="Sure?" @confirm="deleteUser(l.id)" @cancel="cancel">
                   <a-button danger size="sm" class="text-danger">Done</a-button
                 ></a-popconfirm
@@ -236,7 +239,7 @@ export default {
           Authorization: `${token}`
         }
       }).then(res => {
-        if (res.data.success === 0) {
+        if (res.data.status === 0) {
           message.success(res.data.msg);
           this.load();
         } else {
@@ -317,6 +320,7 @@ export default {
           this.load();
         } else {
           message.error(res.data.message);
+          this.load();
         }
       });
     },
@@ -342,7 +346,15 @@ export default {
       }
     },
     load() {
-      const url = "http://localhost:4000/api/incident/getAllIncident";
+      const userinfo = localStorage.getItem("user");
+      const adduid = JSON.parse(userinfo).id;
+      console.log("UID: " + adduid)
+      let url
+      if (this.isAdmin()) {
+        url = "http://localhost:4000/api/incident/getAllIncident"
+      } else {
+        url = `http://localhost:4000/api/incident/${adduid}/getIncident`
+      }
       const token = localStorage.getItem("token");
       if (!token) {
         message.error('You are not login');
@@ -360,6 +372,23 @@ export default {
           .catch(error => {
             console.log(error);
           });
+      }
+    },
+    isAdmin() {
+      let userInfo = localStorage.getItem("user")
+      if (!userInfo) {
+        console.log("Not logined")
+        return false
+      } else {
+        let userRole = JSON.parse(userInfo).role
+        console.log(JSON.parse(userInfo))
+        console.log("role"+userRole)
+        if ( userRole > 0) {
+          console.log("Admin welcome")
+          return true
+        } else {
+          console.log("Normal User")
+        }
       }
     }
   }

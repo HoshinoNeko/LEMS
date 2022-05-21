@@ -1,8 +1,8 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6>Instruments table</h6>
-      <a-button type="primary" @click="showModal">New Device</a-button>
+      <h6 style="display: inline-block;">Device table</h6>
+      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">New Device</a-button>
       <a-modal
           v-model:visible="visible"
           title="New Instrument"
@@ -10,50 +10,56 @@
           cancel-text="Cancel"
           @ok="hideModal"
       >
-        <form class="ant-form ant-form-vertical">
-        <span class="form-label-text" style="display: block;">Name</span>
-        <input
-            type="text"
-            id="addName"
-            placeholder="Name"
-            class="ant-col ant-form-item-control"
-        >
-        <span class="form-label-text" style="display: block;">Symbol</span>
-        <input
-            type="text"
-            id="addSymbol"
-            class="form-input"
-            placeholder="标识"
-        >
-        <span class="form-label-text" style="display: block;">Location</span>
-        <input
-            type="text"
-            id="addLocation"
-            class="form-input"
-            placeholder="Location"
-        >
-        <span class="form-label-text" style="display: block;">Instruction</span>
-        <input
-            type="text"
-            id="addInstruction"
-            class="form-input"
-            placeholder="Instruction"
-        >
-          <span class="form-label-text" style="display: block;">Enable</span>
-          <input
+        <a-form-item class="ant-form ant-form-vertical">
+          <span class="form-label-text" style="display: block;">Name</span>
+          <a-textarea
               type="text"
+              id="addName"
+              placeholder="Name for device"
+              class="ant-col ant-form-item-control"
+              style="width: 100%;"
+          />
+          <span class="form-label-text" style="display: block;">Symbol</span>
+          <a-textarea
+              type="number"
+              id="addSymbol"
+              class="form-input textarea"
+              style="width: 100%;"
+              placeholder="Symbol"
+          />
+          <span class="form-label-text" style="display: block;">Location</span>
+          <a-textarea
+              type="text"
+              id="addLocation"
+              placeholder="Location"
+              class="ant-col ant-form-item-control"
+              style="width: 100%;"
+          />
+          <span class="form-label-text" style="display: block;">Instruction</span>
+          <a-textarea
+              type="text"
+              id="addInstruction"
+              class="form-input textarea"
+              style="width: 100%;"
+              placeholder="Instruction"
+          />
+          <span class="form-label-text" style="display: block;">Enable 0 for enable 1 for disable</span>
+          <a-textarea
+              type="number"
               id="addEnable"
-              class="form-input"
-              placeholder="0 for enable, 1 for disable"
-          >
-          <span class="form-label-text" style="display: block;">remark</span>
-          <input
+              placeholder="0"
+              class="ant-col ant-form-item-control"
+              style="width: 100%;"
+          />
+          <span class="form-label-text" style="display: block;">Remark</span>
+          <a-textarea
               type="text"
               id="addRemark"
-              class="form-input"
+              class="form-input textarea"
+              style="width: 100%;"
               placeholder="Remark"
-          >
-        </form>
+          />
+        </a-form-item>
       </a-modal>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
@@ -80,6 +86,11 @@
                   class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
                 Enable
+              </th>
+              <th
+                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+              >
+                Occupied
               </th>
               <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
@@ -114,10 +125,14 @@
               <td>
                 <p class="text-xs font-weight-bold mb-0">{{l.location}}</p>
               </td>
-
               <td class="align-middle text-center text-sm">
                 <vsud-badge :color="statusCheckClass(l.enable)" variant="gradient" size="sm"
                   >{{ statusCheck(l.enable) }}</vsud-badge
+                >
+              </td>
+              <td class="align-middle text-center text-sm">
+                <vsud-badge :color="statusCheckClass(l.occupied)" variant="gradient" size="sm"
+                >{{ statusCheck(l.occupied) }}</vsud-badge
                 >
               </td>
               <td>
@@ -128,8 +143,20 @@
                   > {{ l.add_date }} </span
                 >
               </td>
-              <td class="align-middle">
+              <td class="align-middle text-center">
                 <a-button type="primary" @click="showEdit(l.id)">Edit</a-button>
+              </td>
+              <td class="align-middle text-center" v-if="l.enable===0">
+                <a-popconfirm title="确认禁用吗" @confirm="disableDevice(l.id)" @cancel="cancel">
+                  <a-button danger size="sm" class="text-danger">Disable</a-button
+                  ></a-popconfirm
+                >
+              </td>
+              <td class="align-middle text-center" v-else>
+                <a-popconfirm title="确认启用吗" @confirm="enableDevice(l.id)" @cancel="cancel">
+                  <a-button danger size="sm" class="text-danger">Enable</a-button
+                  ></a-popconfirm
+                >
               </td>
               <td class="align-middle">
                 <a-popconfirm title="确认删除吗" @confirm="deleteUser(l.id)" @cancel="cancel">
@@ -264,7 +291,7 @@ export default {
       }).then(res => {
         if (res.data.success === 0) {
           message.success(res.data.msg);
-          this.methods.load();
+          this.load();
         } else {
           message.error(res.data.msg);
         }
@@ -334,6 +361,36 @@ export default {
     deleteUser(id) {
       const token = localStorage.getItem("token");
       axios.delete(`http://localhost:4000/api/instrument/${id}/delInstrument`, {
+        headers: {
+          Authorization: `${token}`
+        }
+      }).then(res => {
+        if (res.data.status === 0) {
+          message.success(res.data.message);
+          this.load();
+        } else {
+          message.error(res.data.message);
+        }
+      });
+    },
+    disableDevice(id) {
+      const token = localStorage.getItem("token");
+      axios.get(`http://localhost:4000/api/instrument/${id}/disable`, {
+        headers: {
+          Authorization: `${token}`
+        }
+      }).then(res => {
+        if (res.data.status === 0) {
+          message.success(res.data.message);
+          this.load();
+        } else {
+          message.error(res.data.message);
+        }
+      });
+    },
+    enableDevice(id) {
+      const token = localStorage.getItem("token");
+      axios.get(`http://localhost:4000/api/instrument/${id}/enable`, {
         headers: {
           Authorization: `${token}`
         }

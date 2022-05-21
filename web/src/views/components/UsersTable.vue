@@ -1,8 +1,8 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6>Users table</h6>
-      <a-button type="primary" @click="showModal">New User</a-button>
+      <h6 style="display: inline-block;">Users table</h6>
+      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">New User</a-button>
       <a-modal
           v-model:visible="visible"
           title="New User"
@@ -10,43 +10,47 @@
           cancel-text="Cancel"
           @ok="hideModal"
       >
-        <form class="ant-form ant-form-vertical">
-        <span class="form-label-text" style="display: block;">Name</span>
-        <input
-            type="text"
-            id="addName"
-            placeholder="Name"
-            class="ant-col ant-form-item-control"
-        >
-        <span class="form-label-text" style="display: block;">Email</span>
-        <input
-            type="text"
-            id="addEmail"
-            class="form-input"
-            placeholder="Email"
-        >
-        <span class="form-label-text" style="display: block;">Internal ID</span>
-        <input
-            type="text"
-            id="addIID"
-            class="form-input"
-            placeholder="Internal ID"
-        >
-          <span class="form-label-text" style="display: block;">Role</span>
-          <input
+        <a-form-item class="ant-form ant-form-vertical">
+          <span class="form-label-text" style="display: block;">Name</span>
+          <a-textarea
               type="text"
+              id="addName"
+              placeholder="Name"
+              class="ant-col ant-form-item-control"
+              style="width: 100%;"
+          />
+          <span class="form-label-text" style="display: block;">Email</span>
+          <a-textarea
+              type="text"
+              id="addEmail"
+              class="form-input textarea"
+              style="width: 100%;"
+              placeholder="Email"
+          />
+          <span class="form-label-text" style="display: block;">Internal ID</span>
+          <a-textarea
+              type="text"
+              id="addIID"
+              class="form-input textarea"
+              style="width: 100%;"
+              placeholder="Internal ID"
+          />
+          <span class="form-label-text" style="display: block;">Role</span>
+          <a-textarea
+              type="number"
               id="addRole"
-              class="form-input"
-              placeholder="0 for user 4 for Admin"
-          >
-        <span class="form-label-text" style="display: block;">Password</span>
-        <input
-            type="text"
-            id="addPassword"
-            class="form-input"
-            placeholder="Password"
-        >
-        </form>
+              class="form-input textarea"
+              style="width: 100%;"
+              placeholder="0 for user 4 for admin"
+          />
+          <span class="form-label-text" style="display: block;">Password</span>
+          <a-textarea
+              type="text"
+              id="addPassword"
+              class="form-input textarea"
+              style="width: 100%;"
+          />
+        </a-form-item>
       </a-modal>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
@@ -94,8 +98,6 @@
               >
                 Delete
               </th>
-              <th class="text-secondary opacity-7"></th>
-              <th class="text-secondary opacity-7"></th>
             </tr>
           </thead>
           <tbody>
@@ -135,7 +137,7 @@
                   > {{ l.reg_date }} </span
                 >
               </td>
-              <td class="align-middle">
+              <td class="align-middle text-center">
                 <a-button type="primary" @click="showEdit(l.s_id, l.email)">Chenge PW</a-button>
                 <a-modal
                     href="javascript:;"
@@ -143,29 +145,29 @@
                     data-toggle="tooltip"
                     data-original-title="Edit user"
                     v-model:visible="editvisible"
-                    title="Modal"
+                    title="New Password"
                     ok-text="确认"
                     cancel-text="取消"
                     @ok="hideEdit"
                 >
-                  <form>
-                    <span class="form-label-text">New Password</span>
-                    <input
+                  <a-form-item class="ant-form ant-form-vertical">
+                    <a-textarea
                         type="text"
                         id="newPW"
-                        class="form-input"
-                        placeholder="Password"
-                    >
-                  </form>
+                        placeholder="New Password"
+                        class="ant-col ant-form-item-control"
+                        style="width: 100%;"
+                    />
+                  </a-form-item>
                 </a-modal>
               </td>
-              <td class="align-middle" v-if="l.enable===0">
+              <td class="align-middle text-center" v-if="l.enable===0">
                 <a-popconfirm title="确认冻结吗" @confirm="banOne(l.id)" @cancel="cancel">
                   <a-button danger size="sm" class="text-danger">Ban</a-button
                   ></a-popconfirm
                 >
               </td>
-              <td class="align-middle" v-else>
+              <td class="align-middle text-center" v-else>
                 <a-popconfirm title="确认解封吗" @confirm="unbanOne(l.id)" @cancel="cancel">
                   <a-button danger size="sm" class="text-danger">unBan</a-button
                   ></a-popconfirm
