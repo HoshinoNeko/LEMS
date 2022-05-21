@@ -38,7 +38,7 @@ const getAllInstruments = (req, res) => {
 }
 
 const editInstrument = (req, res) => {
-    Instrument.editDevice(req.params.id, req.body.name, req.body.symbol, req.body.location, req.body.instruction, req.body.enable, req.body.remark, req.body.add_date, req.body.department, (err, instrument) => {
+    Instrument.editDevice(req.params.id, req.body.name, req.body.symbol, req.body.location, req.body.instruction, req.body.enable, req.body.remark, req.body.department, (err, instrument) => {
         if (err) {
             res.json({
                 success: 1,

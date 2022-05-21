@@ -11,7 +11,7 @@ const createNotice = (uid, title, content, res) => {
 }
 
 const deleteNotice = (id, res) => {
-    sql.query(`delete from announcement where id = ${id}`, (err, result) => {
+    sql.query(`delete from announcement where id = ?`, id, (err, result) => {
         if (err) {
             res(err)
         } else {
