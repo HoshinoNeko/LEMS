@@ -9,8 +9,8 @@
     <div class="shadow-lg card blur">
       <div class="pt-3 pb-0 bg-transparent card-header">
         <div class="float-start">
-          <h5 class="mt-3 mb-0">UI Configurator</h5>
-          <p>See our dashboard options.</p>
+          <h5 class="mt-3 mb-0">界面编辑器</h5>
+          <p></p>
         </div>
         <div class="mt-4 float-end" @click="toggle">
           <button class="p-0 btn btn-link text-dark fixed-plugin-close-button">
@@ -23,7 +23,7 @@
       <div class="pt-0 card-body pt-sm-3">
         <!-- Sidebar Backgrounds -->
         <div>
-          <h6 class="mb-0">Sidebar Colors</h6>
+          <h6 class="mb-0">选择强调色</h6>
         </div>
         <a href="#" class="switch-trigger background-color">
           <div
@@ -64,8 +64,8 @@
         </a>
         <!-- Sidenav Type -->
         <div class="mt-3">
-          <h6 class="mb-0">Sidenav Type</h6>
-          <p class="text-sm">Choose between 2 different sidenav types.</p>
+          <h6 class="mb-0">侧边栏设置</h6>
+          <p class="text-sm"></p>
         </div>
         <div class="d-flex">
           <button
@@ -74,7 +74,7 @@
             :class="ifTransparent === 'bg-transparent' ? 'active' : ''"
             @click="sidebarType('bg-transparent')"
           >
-            Transparent
+            透明
           </button>
           <button
             id="btn-white"
@@ -82,7 +82,7 @@
             :class="ifTransparent === 'bg-white' ? 'active' : ''"
             @click="sidebarType('bg-white')"
           >
-            White
+            纯白
           </button>
         </div>
         <p class="mt-2 text-sm d-xl-none d-block">
@@ -90,7 +90,7 @@
         </p>
         <!-- Navbar Fixed -->
         <div class="mt-3">
-          <h6 class="mb-0">Navbar Fixed</h6>
+          <h6 class="mb-0">固定导航栏</h6>
         </div>
         <div class="form-check form-switch ps-0">
           <input
@@ -107,7 +107,7 @@
         <a
           class="btn btn-outline-dark w-100"
           href="https://www.creative-tim.com/learning-lab/vue/overview/soft-ui-dashboard/"
-          >View documentation</a
+          >查看文档</a
         >
         <div class="text-center w-100"><!--
           <a

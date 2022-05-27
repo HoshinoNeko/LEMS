@@ -66,6 +66,19 @@ const approveReturn = (req, res) => {
     });
 }
 
+const rejectReturn = (req, res) => {
+    ireturn.rejectReturn(req.params.id, (err, data) => {
+        if (err) {
+            res.json({
+                status: 1,
+                message: err,
+                data: data
+            });
+        }
+        res.json({status: 0, message: "ok"})
+    });
+}
+
 const getUndoneReturn = (req, res) => {
     ireturn.getUndoneReturn((err, data) => {
         if (err) {
@@ -87,5 +100,6 @@ module.exports = {
     getAllReturn,
     getReturnByID,
     approveReturn,
-    getUndoneReturn
+    getUndoneReturn,
+    rejectReturn,
 }

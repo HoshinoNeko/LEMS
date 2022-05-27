@@ -43,7 +43,7 @@
               <span v-if="this.$store.state.isRTL" class="d-sm-inline d-none"
                 >يسجل دخول</span
               >
-              <span v-else class="d-sm-inline d-none">Sign In </span>
+              <span v-else class="d-sm-inline d-none"> {{email}} </span>
             </router-link>
           </li>
           <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -87,6 +87,8 @@
             >
               <i class="cursor-pointer fa fa-bell"></i>
             </a>
+          </li>
+            <!--
             <ul
               class="px-2 py-3 dropdown-menu dropdown-menu-end me-sm-n4"
               :class="showMenu ? 'show' : ''"
@@ -115,6 +117,7 @@
                   </div>
                 </a>
               </li>
+              -->
               <!--
               <li class="mb-2">
                 <a class="dropdown-item border-radius-md" href="javascript:;">
@@ -139,7 +142,6 @@
                   </div>
                 </a>
               </li>
-              -->
               <li>
                 <a class="dropdown-item border-radius-md" href="javascript:;">
                   <div class="py-1 d-flex">
@@ -196,7 +198,7 @@
                 </a>
               </li>
             </ul>
-          </li>
+          -->
         </ul>
       </div>
     </div>
@@ -211,11 +213,15 @@ export default {
   data() {
     return {
       showMenu: false,
+      email: NaN,
+      id: NaN,
+      reg_date: NaN,
     };
   },
   props: ["minNav", "textWhite"],
   created() {
     this.minNav;
+    this.loadInfo()
   },
   methods: {
     ...mapMutations(["navbarMinimize", "toggleConfigurator"]),
@@ -225,6 +231,15 @@ export default {
       this.toggleSidebarColor("bg-white");
       this.navbarMinimize();
     },
+    loadInfo() {
+      let userInfo = localStorage.getItem("user")
+      if (userInfo) {
+        console.log("Not logined")
+        this.email = JSON.parse(userInfo).email
+        this.id = JSON.parse(userInfo).id
+        this.reg_date = JSON.parse(userInfo).reg_date
+      }
+    }
   },
   components: {
     Breadcrumbs,

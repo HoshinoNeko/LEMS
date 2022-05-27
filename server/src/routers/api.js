@@ -6,7 +6,9 @@ const instrument = require('./instrument')
 const rent = require('./rent')
 const ireturn = require('./ireturn')
 const incident = require('./incident')
+const isystem = require('./system')
 const announcement = require('./announcement')
+const message = require('./message')
 const jwt = require("jsonwebtoken");
 const fs = require('fs');
 const path = require("path");
@@ -58,6 +60,8 @@ router.use('/user', user)
 router.use('/instrument', instrument)
 router.use('/announcement', announcement)
 router.use('/rent', rent)
+router.use('/system', isystem)
 router.use('/return', ireturn)
 router.use('/incident', incident)
+router.use('/message', message)
 module.exports = router

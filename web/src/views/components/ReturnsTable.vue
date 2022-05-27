@@ -1,7 +1,7 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6>Return table</h6>
+      <h6>设备归还</h6>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -11,17 +11,22 @@
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Device / Return ID
+                设备 / 借用 ID
               </th>
               <th
                   class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Duration By day
+                设备标题
+              </th>
+              <th
+                  class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+              >
+                时长
               </th>
               <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Add at
+                借用时间
               </th>
               <th class="text-secondary opacity-7"></th>
             </tr>
@@ -31,15 +36,18 @@
               <td>
                 <div class="d-flex px-2 py-1">
                   <div class="d-flex flex-column justify-content-center">
-                    <h6 class="mb-0 text-sm"> Device ID: {{ l.instrument_id }} </h6>
+                    <h6 class="mb-0 text-sm"> 设备 ID: {{ l.instrument_id }} </h6>
                     <p class="text-xs text-secondary mb-0">
-                      Return ID: {{ l.id }}
+                      归还ID : {{ l.id }}
                     </p>
                   </div>
                 </div>
               </td>
               <td>
-                <p class="text-xs font-weight-bold mb-0" style="text-align: center;">{{l.duration}}</p>
+                <p class="text-xs font-weight-bold mb-0" style="text-align: center;">{{l.name}}</p>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0" style="text-align: center;">{{l.duration}} 天</p>
               </td>
 
               <td class="align-middle text-center">
@@ -47,16 +55,21 @@
                   > {{ l.rent_date }} </span
                 >
               </td>
-
+              <td class="align-middle text-center"  v-if="l.done===2">
+                <a>
+                  <a-button danger size="sm" class="text-danger" title="请联系管理员">已拒绝</a-button
+                  ></a
+                >
+              </td>
               <td class="align-middle text-center"  v-if="l.done===1">
-                <a-popconfirm title="Sure?" @confirm="deleteUser(l.instrument_id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Return</a-button
+                <a-popconfirm title="确认归还吗?" @confirm="deleteUser(l.instrument_id)" @cancel="cancel">
+                  <a-button success size="sm" class="text-warning">归还</a-button
                 ></a-popconfirm
                 >
               </td>
-              <td class="align-middle text-center"  v-else>
+              <td class="align-middle text-center"  v-if="l.done===0">
                 <a>
-                  <a-button success size="sm" class="text-success">Done</a-button
+                  <a-button success size="sm" class="text-success">已归还</a-button
                   ></a
                 >
               </td>

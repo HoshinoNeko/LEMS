@@ -5,63 +5,63 @@
   >
     <ul class="navbar-nav">
       <li class="nav-item">
-        <sidenav-collapse navText="Dashboard" :to="{ name: 'Dashboard' }">
+        <sidenav-collapse v-if="isAdmin()" navText="主页" :to="{ name: 'Dashboard' }">
           <template #icon>
             <shop />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse v-if="isAdmin()" navText="Users" :to="{ name: 'Users' }">
+        <sidenav-collapse v-if="isAdmin()" navText="用户管理" :to="{ name: 'Users' }">
           <template #icon>
             <office />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse v-if="isAdmin()" navText="Intruments" :to="{ name: 'Instruments' }">
+        <sidenav-collapse v-if="isAdmin()" navText="设备管理" :to="{ name: 'Instruments' }">
           <template #icon>
             <office />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="Rents" :to="{ name: 'Rents' }">
+        <sidenav-collapse navText="设备借用" :to="{ name: 'Rents' }">
           <template #icon>
             <office />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="Inciednts" :to="{ name: 'Incidents' }">
+        <sidenav-collapse navText="设备报修处理" :to="{ name: 'Incidents' }">
           <template #icon>
             <office />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="Returns" :to="{ name: 'Returns' }">
+        <sidenav-collapse navText="归还申请" :to="{ name: 'Returns' }">
           <template #icon>
             <office />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse v-if="isAdmin()" navText="ReturnApprovals" :to="{ name: 'ReturnApprovals' }">
+        <sidenav-collapse v-if="isAdmin()" navText="归还处理" :to="{ name: 'ReturnApprovals' }">
           <template #icon>
             <office />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse navText="Announcement" :to="{ name: 'Notices' }">
+        <sidenav-collapse navText="系统公告" :to="{ name: 'Notices' }">
           <template #icon>
             <office />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse v-if="isAdmin()" navText="Manage Announcement" :to="{ name: 'NoticesAdmin' }">
+        <sidenav-collapse v-if="isAdmin()" navText="公告管理" :to="{ name: 'NoticesAdmin' }">
           <template #icon>
             <office />
           </template>
@@ -106,28 +106,28 @@
         </h6>
       </li>
       <li class="nav-item">
-        <sidenav-collapse v-if="isAdmin()" navText="Profile" :to="{ name: 'Profile' }">
+        <sidenav-collapse v-if="isAdmin()" navText="个人资料" :to="{ name: 'Profile' }">
           <template #icon>
             <customer-support />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse v-if="!isLogin()" navText="Sign In" :to="{ name: 'Sign In' }">
+        <sidenav-collapse v-if="!isLogin()" navText="登录" :to="{ name: 'Sign In' }">
           <template #icon>
             <document />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse v-if="!isLogin()" navText="Sign Up" :to="{ name: 'Sign Up' }">
+        <sidenav-collapse v-if="!isLogin()" navText="注册" :to="{ name: 'Sign Up' }">
           <template #icon>
             <spaceship />
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse onclick="logout()" navText="Logout" :to="{ name: 'Sign In' }">
+        <sidenav-collapse v-if="isLogin()" @click="logout()" navText="登出" :to="{ name: 'Sign In' }">
           <template #icon>
             <spaceship />
           </template>
@@ -138,8 +138,8 @@
   <div class="pt-3 mx-3 mt-3 sidenav-footer">
     <sidenav-card
       :class="cardBg"
-      textPrimary="Need Help?"
-      textSecondary="Please contact us"
+      textPrimary="需要帮助?"
+      textSecondary="请联系我们的电子邮箱"
       route="mailto:help@somedomain.edu.cn"
       label="help@somedomain.edu.cn"
       icon="ni ni-diamond"

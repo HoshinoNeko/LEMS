@@ -11,7 +11,7 @@ const addReturn = (s_id, i_id, result) => {
 }
 
 const getReturnByID = (s_id, result) => {
-    sql.query("select * from ireturn where s_id = ?", [s_id], (err, res) => {
+    sql.query("select r.*, u.sname as uname, i.name as iname from ireturn r, user u, instrument i where u.id = r.s_id AND i.id = r.i_id AND r.s_id = ?", [s_id], (err, res) => {
         if (err) {
             result(null, err);
             return;
@@ -25,9 +25,8 @@ const getReturnByID = (s_id, result) => {
 }
 
 const getAllReturn = (result) => {
-    sql.query("select * from ireturn", (err, res) => {
+    sql.query("select r.*, u.sname as uname, i.name as iname from ireturn r, user u, instrument i where u.id = r.s_id AND i.id = r.i_id", (err, res) => {
         if (err) {
-            console.log("error: ", err);
             return;
         }
         result(null, res);
@@ -55,6 +54,17 @@ const approveReturn = (id, i_id, result) => {
         }
     })
 }
+
+const rejectReturn = (id, result) => {
+    sql.query("UPDATE schedule set done = 2  WHERE 1 ORDER BY id DESC LIMIT 1", (err, callback) => {
+        if (err) {
+            result(err)
+        } else {
+            result(null, callback)
+            sql.query("UPDATE ireturn set done = 2 where id = ?", id)
+        }
+    })
+}
 /*
 const approveReturn = (id, result) => {
     sql.query("update ireturn set done = 0 where id = ?", [id], (err, res) => {
@@ -66,7 +76,7 @@ const approveReturn = (id, result) => {
 }
 */
 const getUndoneReturn = (result) => {
-    sql.query("select * from ireturn where done = 1", (err, res) => {
+    sql.query("select r.*, u.sname as uname, i.name as iname from ireturn r, user u, instrument i where u.id = r.s_id AND i.id = r.i_id AND ( done = 1 OR done = 2 )", (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -82,5 +92,6 @@ module.exports = {
     getReturnByID,
     getAllReturn,
     approveReturn,
-    getUndoneReturn
+    getUndoneReturn,
+    rejectReturn
 }

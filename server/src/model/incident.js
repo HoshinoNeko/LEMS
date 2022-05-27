@@ -22,22 +22,54 @@ const getAllIncident = (result) => {
     });
 };
 
-const doIncident = (id, result) => {
-    sql.query("UPDATE incident SET done = 0 WHERE id = ?", id, (err, res) => {
+const confirmIncident = (id, result) => {
+    sql.query("UPDATE incident set done = 2 where id = ?", id ,(err, callback) => {
         if (err) {
-            console.log("error: ", err);
-            result(err, null);
-            return;
+            return result(err)
+        } else {
+            sql.query("select instrument_id from incident where id = ?", id, (err, callback) => {
+                if(err) {
+                    return result(err)
+                } else {
+                    sql.query("update instrument set enable = 1 where id = ?", callback[0].instrument_id, (err, callback) => {
+                        if(err) {
+                            return result(err)
+                        } else {
+                            return result(null, callback)
+                        }
+                    })
+                }
+            })
         }
+    })
+}
 
-        if (res.affectedRows === 0) {
-            // not found Incident with the id
-            result({status: "1", msg: "Incident Not found"}, null);
-            return;
+const solveIncident = (id, result) => {
+    sql.query("UPDATE incident SET done = 0 WHERE id = ?", [id], (err, res) => {
+        if (err) {
+            result(err)
+        } else {
+            sql.query("select instrument_id from incident where id = ?", id, (err, res) => {
+                sql.query("UPDATE instrument set enable = 0 where id = ?", res[0].instrument_id, (err, res) =>{
+                    if(err) {
+                        result(err)
+                    } else {
+                        result(null, res)
+                    }
+                })
+            })
         }
-
-        result(null, {status: "0", msg: "Incident done"});
     });
+}
+
+const deleteIncident = (id, result) => {
+    sql.query("DELETE FROM incident where id = ?", id ,(err, res) => {
+        if (err) {
+            result(err)
+        } else {
+            result(null, res)
+        }
+    })
 }
 
 const getIncidentById = (id, result) => {
@@ -62,6 +94,8 @@ const getIncidentById = (id, result) => {
 module.exports = {
     newIncident,
     getAllIncident,
-    doIncident,
+    solveIncident,
+    deleteIncident,
     getIncidentById,
+    confirmIncident,
 };

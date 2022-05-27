@@ -55,8 +55,8 @@ const getIncidentByID = (req, res) => {
     });
 }
 
-const approvalIncident = (req, res) => {
-    Incident.doIncident(req.params.id, (err, callback) => {
+const solveIncident = (req, res) => {
+    Incident.solveIncident(req.params.id, (err, callback) => {
         if (err) {
             res.status(500).json({
                 status: 1,
@@ -65,7 +65,37 @@ const approvalIncident = (req, res) => {
         } else {
             res.status(200).json({
                 status: 0,
-                message: "Incident approved successfully"
+                message: "Incident Solved successfully"
+            });
+        }
+    });
+}
+const confirmIncident = (req, res) => {
+    Incident.confirmIncident(req.params.id, (err, callback) => {
+        if (err) {
+            res.status(500).json({
+                status: 1,
+                message: err.message
+            });
+        } else {
+            res.status(200).json({
+                status: 0,
+                message: "Incident Confirmed"
+            });
+        }
+    });
+}
+const deleteIncident = (req, res) => {
+    Incident.solveIncident(req.params.id, (err, callback) => {
+        if (err) {
+            res.status(500).json({
+                status: 1,
+                message: err.message
+            });
+        } else {
+            res.status(200).json({
+                status: 0,
+                message: "Incident Deleted"
             });
         }
     });
@@ -75,5 +105,8 @@ module.exports = {
     newIncident,
     getAllIncident,
     getIncidentByID,
-    approvalIncident,
+    solveIncident,
+    confirmIncident,
+    deleteIncident,
+
 }

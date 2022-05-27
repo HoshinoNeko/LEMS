@@ -19,7 +19,7 @@ const newSchedule = (user_id, instrument_id, duration, remark, callback) => {
 }}
 
 const getAll = (callback) => {
-    sql.query('SELECT * FROM schedule', (err, res) => {
+    sql.query('select s.*, i.name, i.instruction from schedule s, instrument i where s.instrument_id = i.id', (err, res) => {
         if (err) {
             console.log("error: ", err)
             callback(err, null)
@@ -30,7 +30,7 @@ const getAll = (callback) => {
 }
 
 const getByUser = (user_id, callback) => {
-    sql.query(`SELECT * FROM schedule WHERE user_id = ? ORDER BY rent_date DESC`, user_id, (err, res) => {
+    sql.query(`select s.*, i.name, i.instruction from schedule s, instrument i where s.instrument_id = i.id AND user_id = ? ORDER BY rent_date DESC`, user_id, (err, res) => {
         if (err) {
             callback({
                 status: 1,
@@ -42,6 +42,16 @@ const getByUser = (user_id, callback) => {
                 message: 'Success',
                 data: res
             })
+        }
+    })
+}
+
+const getUserRent = (user_id, callback) => {
+    sql.query(`SELECT COUNT(*) AS nums FROM schedule WHERE user_id = ? and done = 1`, user_id, (err, res) => {
+        if (err) {
+            callback(err)
+        } else {
+            callback(null, res)
         }
     })
 }
@@ -67,5 +77,6 @@ module.exports = {
     newSchedule,
     getAll,
     getByUser,
-    getByDevice
+    getByDevice,
+    getUserRent,
 }

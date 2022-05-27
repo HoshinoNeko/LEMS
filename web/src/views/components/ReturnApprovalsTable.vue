@@ -1,7 +1,7 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6>ReturnApproval table</h6>
+      <h6>归还处理</h6>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -11,17 +11,27 @@
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Return / Device
+                归还 / 设备 ID
               </th>
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                User ID
+                申请用户
+              </th>
+              <th
+                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+              >
+                设备名称
               </th>
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                Applied at
+                申请时间
+              </th>
+              <th
+                  class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+              >
+                状态
               </th>
               <th class="text-secondary opacity-7"></th>
               <th class="text-secondary opacity-7"></th>
@@ -33,17 +43,19 @@
               <td>
                 <div class="d-flex px-2 py-1">
                   <div class="d-flex flex-column justify-content-center">
-                    <h6 class="mb-0 text-sm"> Return: {{ l.id }} </h6>
+                    <h6 class="mb-0 text-sm"> 归还 ID: {{ l.id }} </h6>
                     <p class="text-xs text-secondary mb-0">
-                      Device: {{ l.instrument_id }}
+                      设备 ID: {{ l.i_id }}
                     </p>
                   </div>
                 </div>
               </td>
               <td>
-                <p class="text-xs font-weight-bold mb-0">{{l.s_id}}</p>
+                <p class="text-xs font-weight-bold mb-0">{{l.s_id}} / {{l.uname}}</p>
               </td>
-
+              <td>
+                <p class="text-xs font-weight-bold mb-0">{{l.iname}}</p>
+              </td>
               <td>
                 <p class="text-xs font-weight-bold mb-0">{{l.date}}</p>
               </td>
@@ -52,15 +64,25 @@
                   > {{ l.add_date }} </span
                 >
               </td>
-              <td class="align-middle text-center">
-                <a-popconfirm title="Agree?" @confirm="agree(l.id,l.i_id)" @cancel="cancel">
-                  <a-button success size="sm" class="text-success">Approve</a-button
-                  ></a-popconfirm
+              <td class="align-middle text-center" v-if="l.done === 2">
+                <span class="text-secondary text-xs font-weight-bold text-danger"
+                >已被拒绝</span
+                >
+              </td>
+              <td class="align-middle text-center" v-else>
+                <span class="text-secondary text-xs font-weight-bold text-danger"
+                ></span
                 >
               </td>
               <td class="align-middle text-center">
+                <a-popconfirm title="Agree?" @confirm="agree(l.id,l.i_id)" @cancel="cancel">
+                  <a-button success size="sm" class="text-success">同意</a-button
+                  ></a-popconfirm
+                >
+              </td>
+              <td class="align-middle text-center" v-if="l.done === 1">
                 <a-popconfirm title="Reject?" @confirm="reject(l.id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Reject</a-button
+                  <a-button danger size="sm" class="text-danger">拒绝</a-button
                 ></a-popconfirm
                 >
               </td>
@@ -191,6 +213,21 @@ export default {
     agree(id, i_id) {
       const token = localStorage.getItem("token");
       axios.post(`http://localhost:4000/api/return/${id}/approve` , `i_id=${i_id}`, {
+        headers: {
+          Authorization: `${token}`
+        }
+      }).then(res => {
+        if (res.data.status === 0) {
+          message.success(res.data.message);
+          this.load();
+        } else {
+          message.error(res.data.message);
+        }
+      });
+    },
+    reject(id) {
+      const token = localStorage.getItem("token");
+      axios.post(`http://localhost:4000/api/return/${id}/reject` , [], {
         headers: {
           Authorization: `${token}`
         }

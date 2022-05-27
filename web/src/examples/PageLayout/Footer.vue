@@ -89,7 +89,7 @@
       <div class="row">
         <div class="mx-auto mt-1 text-center col-8">
           <p class="mb-0 text-secondary">
-            Copyright © {{ new Date().getFullYear() }}
+            {{ new Date().getFullYear() }}, Made with <i class="fa fa-heart"></i>
           </p>
         </div>
       </div>

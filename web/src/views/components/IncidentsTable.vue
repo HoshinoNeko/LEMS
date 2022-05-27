@@ -1,39 +1,60 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6 style="display: inline-block;">Incidents table</h6>
-      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">New Incident</a-button>
+      <h6 style="display: inline-block;">故障报修</h6>
+      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">新建报修</a-button>
+      <div class="alert alert-secondary text-white" role="alert">
+        请确认设备是否存在问题再报修，避免造成不必要的人力成本,滥用用户会被系统封禁。
+      </div>
       <a-modal
           v-model:visible="visible"
-          title="New Incident"
-          ok-text="Conform"
-          cancel-text="Cancel"
+          title="新建报修申请"
+          ok-text="提交"
+          cancel-text="取消"
           @ok="hideModal"
       >
         <a-form-item class="ant-form ant-form-vertical">
-          <span class="form-label-text" style="display: block;">Instrument ID</span>
+          <span class="form-label-text" style="display: block;">设备 ID(可以在归还申请中找到设备ID)</span>
           <a-textarea
               type="number"
               id="addiid"
-              placeholder="Instrument ID"
+              placeholder="故障设备ID"
               class="ant-col ant-form-item-control"
               style="width: 100%;"
           />
-          <span class="form-label-text" style="display: block;">Title</span>
+          <span class="form-label-text" style="display: block;">标题</span>
           <a-textarea
               type="text"
               id="addtitle"
               class="form-input textarea"
               style="width: 100%;"
-              placeholder="Title"
+              placeholder="请输入标题"
           />
-          <span class="form-label-text" style="display: block;">Content</span>
+          <span class="form-label-text" style="display: block;">正文(请用简短的语言描述故障)</span>
           <a-textarea
               type="text"
               id="addcontent"
               class="form-input textarea"
               style="width: 100%;"
-              placeholder="Content"
+              placeholder="请输入正文"
+          />
+        </a-form-item>
+      </a-modal>
+      <a-modal
+          v-model:costvisible="visible"
+          title="报修确认"
+          ok-text="提交"
+          cancel-text="取消"
+          @ok="confirmCost"
+      >
+        <a-form-item class="ant-form ant-form-vertical">
+          <span class="form-label-text" style="display: block;">报修花费</span>
+          <a-textarea
+              type="number"
+              id="cost"
+              placeholder="报修花费"
+              class="ant-col ant-form-item-control"
+              style="width: 100%;"
           />
         </a-form-item>
       </a-modal>
@@ -46,61 +67,60 @@
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Instrument Name / ID
+                报修标题 / ID
               </th>
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                Content
+                报修正文
               </th>
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                Done
+                已完成?
               </th>
               <th
                   class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                User / Device
+                用户 / 设备 ID
               </th>
               <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Add at
+                添加时间
               </th>
-              <th class="text-secondary opacity-7"></th>
               <th class="text-secondary opacity-7" v-if="isAdmin()"></th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="l in instruments" v-bind:key="l.id">
-              <td>
+            <tr v-for="item of instruments" v-bind:key="item.id">
+              <td style="max-width: 30vh;">
                 <div class="d-flex px-2 py-1">
                   <div class="d-flex flex-column justify-content-center">
-                    <h6 class="mb-0 text-sm"> {{ l.title }} </h6>
+                    <h6 class="mb-0 text-sm"> {{ item.title }} </h6>
                     <p class="text-xs text-secondary mb-0">
-                      No.{{ l.id }}
+                      No.{{ item.id }}
                     </p>
                   </div>
                 </div>
               </td>
               <td>
-                <p class="text-xs font-weight-bold mb-0" style="max-width: 20vh; overflow: hidden;">{{l.content}}</p>
+                <p class="text-xs font-weight-bold mb-0" style="max-width: 20vh; overflow: hidden;">{{item.content}}</p>
               </td>
 
               <td class="align-middle text-center text-sm">
-                <vsud-badge :color="statusCheckClass(l.done)" variant="gradient" size="sm"
-                  >{{ statusCheck(l.done) }}</vsud-badge
+                <vsud-badge :color="statusCheckClass(item.done)" variant="gradient" size="sm"
+                  >{{ statusCheck(item.done) }}</vsud-badge
                 >
               </td>
               <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"
-                > {{ l.user_id }} / {{ l.instrument_id }}</span
+                > {{ item.user_id }} / {{ item.instrument_id }}</span
                 >
               </td>
               <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"
-                > {{ l.date }}</span
+                > {{ item.date }}</span
                 >
               </td>
               <!--
@@ -108,9 +128,21 @@
                 <a-button type="primary" @click="showEdit(l.id)">Edit</a-button>
               </td>
               -->
-              <td class="align-middle text-center" v-if="isAdmin()">
-                <a-popconfirm title="Sure?" @confirm="deleteUser(l.id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Done</a-button
+              <td class="align-middle text-center" v-if="isAdmin() && item.done === 1">
+                <a-popconfirm title="Sure?" @confirm="confirmIncident(item.id)" @cancel="cancel">
+                  <a-button type="primary" size="sm" title="确认故障">确认</a-button
+                  ></a-popconfirm
+                >
+              </td>
+              <td class="align-middle text-center" v-if="isAdmin() && item.done === 1">
+                <a-popconfirm title="Sure?" @confirm="deleteIncident(item.id)" @cancel="cancel">
+                  <a-button danger size="sm" class="text-danger" title="删除误报">误报</a-button
+                  ></a-popconfirm
+                >
+              </td>
+              <td class="align-middle text-center" v-if="isAdmin() && item.done !== 0">
+                <a-popconfirm title="Sure?" @confirm="solveIncident(item.id)" @cancel="cancel">
+                  <a-button danger size="sm" class="text-danger" title="故障完结">完成</a-button
                 ></a-popconfirm
                 >
               </td>
@@ -308,9 +340,41 @@ export default {
     };
   },
   methods: {
-    deleteUser(id) {
+    solveIncident(id) {
       const token = localStorage.getItem("token");
-      axios.get(`http://localhost:4000/api/incident/${id}/approval`, {
+      axios.get(`http://localhost:4000/api/incident/${id}/solve`, {
+        headers: {
+          Authorization: `${token}`
+        }
+      }).then(res => {
+        if (res.data.status === 0) {
+          message.success(res.data.message);
+          this.load();
+        } else {
+          message.error(res.data.message);
+          this.load();
+        }
+      });
+    },
+    confirmIncident(id) {
+      const token = localStorage.getItem("token");
+      axios.get(`http://localhost:4000/api/incident/${id}/confirm`, {
+        headers: {
+          Authorization: `${token}`
+        }
+      }).then(res => {
+        if (res.data.status === 0) {
+          message.success(res.data.message);
+          this.load();
+        } else {
+          message.error(res.data.message);
+          this.load();
+        }
+      });
+    },
+    deleteIncident(id) {
+      const token = localStorage.getItem("token");
+      axios.get(`http://localhost:4000/api/incident/${id}/delete`, {
         headers: {
           Authorization: `${token}`
         }
@@ -326,17 +390,21 @@ export default {
     },
     statusCheck(status) {
       if (status === 1) {
-        return "Undone";
+        return "未完结";
+      } else if (status ===2) {
+        return "已确认";
       } else {
-        return "Done";
+        return "已完结"
       }
     },
     statusCheckClass(status) {
-      if (status === 0) {
-        return "success";
-      } else {
-        return "danger";
-      }
+        if (status === 1) {
+          return "danger";
+        } else if (status ===2) {
+          return "warning";
+        } else {
+          return "success";
+        }
     },
     roleCheckClass(role) {
       if (role > 1) {
@@ -368,6 +436,7 @@ export default {
           })
           .then(response => {
             this.instruments = response.data.data;
+            console.log(this.instruments)
           })
           .catch(error => {
             console.log(error);
@@ -381,8 +450,6 @@ export default {
         return false
       } else {
         let userRole = JSON.parse(userInfo).role
-        console.log(JSON.parse(userInfo))
-        console.log("role"+userRole)
         if ( userRole > 0) {
           console.log("Admin welcome")
           return true

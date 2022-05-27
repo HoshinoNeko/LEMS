@@ -1,7 +1,7 @@
 drop table if exists user; create table user
                            (
-                               id       int not null auto_increment comment 'UID',
-                               s_id      int not null comment 'Student ID',
+                               id       long not null auto_increment comment 'UID',
+                               s_id      long not null comment 'Student ID',
                                sname text                                     null comment 'Username',
                                email    varchar(64)                              null comment 'User Email',
                                password   varchar(256)                                    not null comment 'Password',
@@ -17,7 +17,7 @@ drop table if exists user; create table user
 
 drop table if exists instrument; create table instrument
                                  (
-                                     id       int not null auto_increment comment 'Instrument ID',
+                                     id       long not null auto_increment comment 'Instrument ID',
                                      name     varchar(64)                              null comment 'Instrument Name',
                                      symbol   varchar(64)                              null comment 'Instrument Symbol',
                                      location varchar(64)                              null comment 'Instrument Location',
@@ -34,9 +34,9 @@ drop table if exists instrument; create table instrument
 
 drop table if exists ireturn; create table ireturn
                              (
-                                 id       int not null auto_increment comment 'Incident ID',
-                                 s_id      int not null comment 'Student ID',
-                                 i_id      int not null comment 'Instrument ID',
+                                 id       long not null auto_increment comment 'Incident ID',
+                                 s_id      long not null comment 'Student ID',
+                                 i_id      long not null comment 'Instrument ID',
                                  date      datetime default current_timestamp() null comment 'Incident date',
                                  done      tinyint(1) default 1 not null comment 'Return job is done',
                                  remark   varchar(512)                             null comment 'Remark',
@@ -49,13 +49,14 @@ drop table if exists ireturn; create table ireturn
 
 drop table if exists incident; create table incident
                                (
-                                   id       int not null auto_increment comment 'Incident ID',
-                                   user_id  int                              null comment 'User ID',
-                                   instrument_id int                        null comment 'Instrument ID',
+                                   id       long not null auto_increment comment 'Incident ID',
+                                   user_id  long                              null comment 'User ID',
+                                   instrument_id long                        null comment 'Instrument ID',
                                    title    varchar(128)                     not null comment 'Incident title',
                                    content  text                             null comment 'Incident content',
                                    date     datetime default current_timestamp() null comment 'Incident date',
                                    done   tinyint(1)     default 1     not null comment 'Incident is done',
+                                   cost    int null comment 'incident cost',
                                    remark   varchar(512)                     null comment 'Remark',
                                    constraint incident_pk
                                        primary key (id),
@@ -65,9 +66,9 @@ drop table if exists incident; create table incident
     comment 'Incident table';
 drop table if exists schedule; create table schedule
                                (
-                                   id       int not null auto_increment comment 'Schedule ID',
-                                   user_id  int                              null comment 'User ID',
-                                   instrument_id  int                              null comment 'Instrument ID',
+                                   id       long not null auto_increment comment 'Schedule ID',
+                                   user_id  long                              null comment 'User ID',
+                                   instrument_id  long                              null comment 'Instrument ID',
                                    rent_date datetime    default now()    not null comment 'Rent date',
                                    done   tinyint(1)     default 1     not null comment 'Schedule is done',
                                    duration int                              not null comment 'Rent Duration',
@@ -80,8 +81,8 @@ drop table if exists schedule; create table schedule
     comment 'Schedule table';
 drop table if exists announcement; create table announcement
                                (
-                                   id        int not null auto_increment comment 'Announcement ID',
-                                   user_id   int       null comment 'User ID',
+                                   id        bigint not null auto_increment comment 'Announcement ID',
+                                   user_id   bigint       null comment 'User ID',
                                    title     text      null comment 'Announcement title',
                                    content   text      null comment 'Announcement content',
                                    add_date  datetime   default current_timestamp not null comment 'Announcement Add date',

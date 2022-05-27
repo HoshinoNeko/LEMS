@@ -25,53 +25,64 @@ const newDevice = (name,symbol,location,instruction,enable,remark,department, ca
 const editDevice = (id,name,symbol,location,instruction,enable,remark,department, callback) => {
     sql.query(`UPDATE instrument SET name=?,symbol=?,location=?,instruction=?,enable=?,remark=?,department=? WHERE id=?`, [name,symbol,location,instruction,enable,remark,department,id], (err, res) => {
         if (err) {
-            console.log("error: ", err);
             callback(err);
             return;
         }
-        console.log("device: ", res);
         callback(null, res);
     });
 }
 
 const delDevice = (id, callback) => {
-    sql.query(`DELETE FROM instrument WHERE id=?`, id, (err, res) => {
+    sql.query(`DELETE FROM schedule WHERE instrument_id = ?`, id, (err, res) => {
         if (err) {
-            console.log("error: ", err);
-            callback(null, err);
-            return;
+            callback(err);
+        } else {
+            sql.query(`DELETE FROM ireturn WHERE i_id = ?`, id, (err, res) => {
+                if (err) {
+                    callback(err)
+                } else {
+                    sql.query('DELETE FROM incident WHERE instrument_id = ?', id, (err, res) => {
+                        if (err) {
+                            callback(err)
+                        } else {
+                            sql.query('DELETE FROM instrument WHERE id = ?', id, (err, res) => {
+                                if(err) {
+                                    callback(err)
+                                } else {
+                                    callback(null, res)
+                                }
+                            })
+                        }
+                    })
+
+                }
+            })
         }
-        console.log("device: ", res);
-        callback(res);
     });
 }
 
 const getDevice = (id, callback) => {
     sql.query(`SELECT * FROM instrument WHERE id=?`, id, (err, res) => {
         if (err) {
-            console.log("error: ", err);
             callback(err);
             return;
         }
-        console.log("device: ", res);
         callback(null, res);
     });
 }
 
 const getAllDevice = (callback) => {
-    sql.query(`SELECT * FROM instrument`, (err, res) => {
+    sql.query(`SELECT * FROM instrument ORDER BY enable ASC, add_date DESC`, (err, res) => {
         if (err) {
-            console.log("error: ", err);
             callback(err);
             return;
         }
-        console.log("device: ", res);
         callback(null, res);
     });
 }
 
 const disableDevice = (id, callback) => {
-    sql.query(`update instrument set enable = 1 where id = `, id, (err, res) => {
+    sql.query(`update instrument set enable = 1 where id = ?`, id, (err, res) => {
         if (err) {
             callback(err)
         } else {
@@ -81,7 +92,7 @@ const disableDevice = (id, callback) => {
 }
 
 const enableDevice = (id, callback) => {
-    sql.query(`update instrument set enable = 0 where id = `, id, (err, res) => {
+    sql.query(`update instrument set enable = 0 where id = ?`, id, (err, res) => {
         if (err) {
             callback(err)
         } else {
@@ -93,17 +104,15 @@ const enableDevice = (id, callback) => {
 const isAvailableDevice = (id, callback) => {
     sql.query(`SELECT * FROM instrument where id = ? and occupied = 1`, id, (err, res) => {
         if (err) {
-            console.log("error: ", err);
             callback(err);
             return;
         }
-        console.log("device: ", res);
         callback(null, res);
     });
 }
 
 const getAvailableDevices = (callback) => {
-    sql.query(`SELECT * FROM instrument where enable = 0 and occupied = 0`, (err, res) => {
+    sql.query(`SELECT * FROM instrument where enable = 0 and occupied = 0 ORDER BY add_date DESC`, (err, res) => {
         if (err) {
             callback(err);
             return;
@@ -115,7 +124,6 @@ const getAvailableDevices = (callback) => {
 const deviceNum = (callback) => {
     sql.query(`SELECT COUNT(*) FROM instrument`, (err, res) => {
         if (err) {
-            console.log("error: ", err);
             callback(err);
             return;
         }
@@ -126,11 +134,9 @@ const deviceNum = (callback) => {
 const freeDevice = (id, callback) => {
     sql.query(`UPDATE instrument SET occupied = 1 WHERE id = ?`, id, (err, res) => {
         if (err) {
-            console.log("error: ", err);
             callback(err);
             return;
         }
-        console.log("device: ", res);
         callback(null, res);
     });
 }

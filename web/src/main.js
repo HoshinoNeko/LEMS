@@ -24,6 +24,7 @@ import "./assets/css/nucleo-svg.css";
 import SoftUIDashboard from "./soft-ui-dashboard";
 import 'ant-design-vue/dist/antd.css';
 import Antd from 'ant-design-vue';
+require('./assets/css/tr.css')
 const appInstance = createApp(App);
 
 appInstance.use(store)

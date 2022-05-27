@@ -1,7 +1,13 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6>Rents table</h6>
+      <h6>设备借用</h6>
+      <div class="alert alert-info" role="alert" style="color: white;">
+        设备采购和运营需要资源，请珍惜设备:)
+      </div>
+      <div class="alert alert-light" role="alert">
+        为了其他人的权益，请按时归还设备。
+      </div>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -11,24 +17,23 @@
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Instrument Name / ID
+                设备名称 / ID
               </th>
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                Symbol
+                设备类型
               </th>
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                Location
+                设备保管位置
               </th>
               <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Instruction
+                设备说明
               </th>
-              <th class="text-secondary opacity-7"></th>
               <th class="text-secondary opacity-7"></th>
 
             </tr>
@@ -52,24 +57,27 @@
               <td>
                 <p class="text-xs font-weight-bold mb-0">{{l.location}}</p>
               </td>
-              <td>
+              <td class="align-middle text-center text-sm" v-if="isUrl(l.instruction)">
+                <p class="text-xs font-weight-bold mb-0"><a style="color: deepskyblue;" target="_blank" :href=l.instruction ><img style="width: 15%;" src="https://img.icons8.com/ios-glyphs/60/link--v1.png" alt="LINK"></a></p>
+              </td>
+              <td class="align-middle text-center text-sm" v-else>
                 <p class="text-xs font-weight-bold mb-0">{{l.instruction}}</p>
               </td>
               <td class="align-middle text-center">
-                <a-button type="primary" @click="showEdit(l.id)">Rent</a-button>
+                <a-button type="primary" @click="showEdit(l.id)">申请借用</a-button>
               </td>
             </tr>
           </tbody>
           <a-modal
               class="text-secondary font-weight-bold text-xs"
               v-model:visible="editvisible"
-              title="Rent Device"
-              ok-text="Apply"
-              cancel-text="Cancel"
+              title="设备借用"
+              ok-text="提交"
+              cancel-text="取消"
               @ok="hideEdit()"
           >
             <a-form-item class="ant-form ant-form-vertical">
-              <span class="form-label-text" style="display: block;">Duration(by day)</span>
+              <span class="form-label-text" style="display: block;">借用时长(按天)</span>
               <a-textarea
                   type="number"
                   id="editduration"
@@ -77,7 +85,7 @@
                   class="ant-col ant-form-item-control"
                   style="width: 100%;"
               />
-              <span class="form-label-text" style="display: block;">Remark</span>
+              <span class="form-label-text" style="display: block;">借用说明</span>
               <a-textarea
                   type="text"
                   id="editremark"
@@ -105,6 +113,7 @@ import { message } from 'ant-design-vue';
 import axios from "axios";
 import {ref} from "vue";
 import Modal from 'ant-design-vue';
+
 export default {
   name: "rents-table",
   data() {
@@ -269,6 +278,9 @@ export default {
           console.log("Normal User")
         }
       }
+    },
+    isUrl(urlop) {
+      return urlop.startsWith("http");
     },
     load() {
       const url = "http://localhost:4000/api/instrument/getAvailable";

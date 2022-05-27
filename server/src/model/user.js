@@ -25,7 +25,7 @@ const findOne = (email, s_id, callback) => {
 }
 
 const getAll = (callback) => {
-    sql.query('SELECT * FROM user', (err, res) => {
+    sql.query('SELECT * FROM user ORDER BY reg_date DESC', (err, res) => {
         if (err) {
             callback(err, null)
         } else {
@@ -35,7 +35,6 @@ const getAll = (callback) => {
     })
 }
 const create = (name,email,sid,password, callback) => {
-
     sql.query('INSERT INTO user SET sname = ?, email = ?, s_id = ?, password = ?', name, email, sid, password, (err, res) => {
         if (err.errno === 1062) {
             callback(err, "user already exists")
@@ -56,10 +55,29 @@ const createInAdmin = (name,email,sid,role,password, callback) => {
 
 
 const deleteOne = (id, callback) => {
-    sql.query('DELETE FROM user WHERE id = ?', id, (err, res) => {
+    sql.query('DELETE FROM incident WHERE user_id = ?', id, (err, res) => {
         if (err) {
-            callback(err, null)
+            callback(err)
         } else {
+            sql.query('DELETE FROM schedule WHERE user_id = ?', id, (err, result) => {
+                if (err) {
+                    callback(err)
+                } else {
+                    sql.query('DELETE FROM ireturn WHERE s_id = ?', id, (err, result) => {
+                        if (err) {
+                            callback(err)
+                        } else {
+                            sql.query('DELETE FROM user WHERE id = ?', id, (err, res) => {
+                                if (err) {
+                                    callback(err)
+                                } else {
+                                    callback(null,res)
+                                }
+                            })
+                        }
+                    })
+                }
+            })
             callback(null, res)
         }
     })
@@ -105,6 +123,16 @@ const findByID = (id, callback) => {
     })
 }
 
+const findPWByID = (id, callback) => {
+    sql.query('SELECT password FROM user WHERE id = ?', id, (err, res) => {
+        if (err) {
+            callback(err, null)
+        } else {
+            callback(null, res[0].password)
+        }
+    })
+}
+
 const updateOne = (id, s_id,  sname, email, password , enable, role, remark, callback) => {
     sql.query('UPDATE user SET sname = ?, email = ?, s_id = ?, password = ?, enable = ?, role = ?, remark = ? WHERE id = ?', [sname, email, s_id, password, enable , role, remark, id], (err, res) => {
         if (err) {
@@ -137,4 +165,5 @@ module.exports = {
     userNum,
     banOne,
     unbanOne,
+    findPWByID,
 };

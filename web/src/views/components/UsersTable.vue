@@ -1,17 +1,17 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6 style="display: inline-block;">Users table</h6>
-      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">New User</a-button>
+      <h6 style="display: inline-block;">用户管理</h6>
+      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">新增用户</a-button>
       <a-modal
           v-model:visible="visible"
-          title="New User"
-          ok-text="Conform"
-          cancel-text="Cancel"
+          title="新用户"
+          ok-text="确认"
+          cancel-text="取消"
           @ok="hideModal"
       >
         <a-form-item class="ant-form ant-form-vertical">
-          <span class="form-label-text" style="display: block;">Name</span>
+          <span class="form-label-text" style="display: block;">用户姓名</span>
           <a-textarea
               type="text"
               id="addName"
@@ -19,7 +19,7 @@
               class="ant-col ant-form-item-control"
               style="width: 100%;"
           />
-          <span class="form-label-text" style="display: block;">Email</span>
+          <span class="form-label-text" style="display: block;">用户邮箱</span>
           <a-textarea
               type="text"
               id="addEmail"
@@ -27,7 +27,7 @@
               style="width: 100%;"
               placeholder="Email"
           />
-          <span class="form-label-text" style="display: block;">Internal ID</span>
+          <span class="form-label-text" style="display: block;">内部ID</span>
           <a-textarea
               type="text"
               id="addIID"
@@ -35,7 +35,7 @@
               style="width: 100%;"
               placeholder="Internal ID"
           />
-          <span class="form-label-text" style="display: block;">Role</span>
+          <span class="form-label-text" style="display: block;">用户角色</span>
           <a-textarea
               type="number"
               id="addRole"
@@ -43,7 +43,7 @@
               style="width: 100%;"
               placeholder="0 for user 4 for admin"
           />
-          <span class="form-label-text" style="display: block;">Password</span>
+          <span class="form-label-text" style="display: block;">用户密码</span>
           <a-textarea
               type="text"
               id="addPassword"
@@ -61,42 +61,42 @@
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                User
+                用户姓名/邮箱
               </th>
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                Function
+                用户角色
               </th>
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                Internal ID
+                内部 ID
               </th>
               <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Status
+                是否封禁
               </th>
               <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Register at
+                注册时间
               </th>
               <th
                   class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Change Password
+                密码修改
               </th>
               <th
                   class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Ban
+                冻结
               </th>
               <th
                   class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Delete
+                移除
               </th>
             </tr>
           </thead>
@@ -106,7 +106,7 @@
                 <div class="d-flex px-2 py-1">
                   <div>
                     <vsud-avatar
-                      img="https://secure.gravatar.com/avatar/910cf47806ccf2b1a5ac0eaa5fc12d60?s=512"
+                      img="https://i.pravatar.cc/300"
                       size="sm"
                       border-radius="lg"
                       class="me-3"
@@ -121,8 +121,10 @@
                   </div>
                 </div>
               </td>
-              <td>
-                <p class="text-xs font-weight-bold mb-0">{{roleCheckClass(l.role)}}</p>
+              <td class="align-middle text-center text-sm">
+                <vsud-badge :color="statusCheckClass(l.role)" variant="gradient" size="sm"
+                >{{ roleCheck(l.role) }}</vsud-badge
+                >
               </td>
               <td>
                 <p class="text-xs font-weight-bold mb-0">{{l.s_id}}</p>
@@ -138,44 +140,23 @@
                 >
               </td>
               <td class="align-middle text-center">
-                <a-button type="primary" @click="showEdit(l.s_id, l.email)">Chenge PW</a-button>
-                <a-modal
-                    href="javascript:;"
-                    class="text-secondary font-weight-bold text-xs"
-                    data-toggle="tooltip"
-                    data-original-title="Edit user"
-                    v-model:visible="editvisible"
-                    title="New Password"
-                    ok-text="确认"
-                    cancel-text="取消"
-                    @ok="hideEdit"
-                >
-                  <a-form-item class="ant-form ant-form-vertical">
-                    <a-textarea
-                        type="text"
-                        id="newPW"
-                        placeholder="New Password"
-                        class="ant-col ant-form-item-control"
-                        style="width: 100%;"
-                    />
-                  </a-form-item>
-                </a-modal>
+                <a-button type="primary" @click="showEdit(l.id)">密码修改</a-button>
               </td>
               <td class="align-middle text-center" v-if="l.enable===0">
                 <a-popconfirm title="确认冻结吗" @confirm="banOne(l.id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Ban</a-button
+                  <a-button type="danger" size="sm">冻结</a-button
                   ></a-popconfirm
                 >
               </td>
               <td class="align-middle text-center" v-else>
                 <a-popconfirm title="确认解封吗" @confirm="unbanOne(l.id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">unBan</a-button
+                  <a-button type="primary" size="sm">解冻</a-button
                   ></a-popconfirm
                 >
               </td>
               <td class="align-middle">
                 <a-popconfirm title="确认删除吗" @confirm="deleteUser(l.id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Delete</a-button
+                  <a-button danger size="sm" class="text-danger">移除</a-button
                 ></a-popconfirm
                 >
               </td>
@@ -184,6 +165,27 @@
         </table>
       </div>
     </div>
+    <a-modal
+        href="javascript:;"
+        class="text-secondary font-weight-bold text-xs"
+        data-toggle="tooltip"
+        data-original-title="Edit user"
+        v-model:visible="editvisible"
+        title="新密码"
+        ok-text="确认"
+        cancel-text="取消"
+        @ok="hideEdit"
+    >
+      <a-form-item class="ant-form ant-form-vertical">
+        <a-textarea
+            type="text"
+            id="newPW"
+            placeholder="用户新密码"
+            class="ant-col ant-form-item-control"
+            style="width: 100%;"
+        />
+      </a-form-item>
+    </a-modal>
   </div>
 </template>
 
@@ -272,6 +274,7 @@ export default {
       const url = "http://localhost:4000/api/user/updatePW";
       const token = localStorage.getItem("token");
       const password = document.getElementById("newPW").value;
+      console.log(sid + " " + email + " " + password)
       axios.post(url, `s_id=${sid}&email=${email}&password=${password}`, {
         headers: {
           Authorization: `${token}`
@@ -356,9 +359,9 @@ export default {
     },
     statusCheck(status) {
       if (status === 1) {
-        return "Banned";
+        return "冻结";
       } else {
-        return "Enabled";
+        return "正常";
       }
     },
     statusCheckClass(status) {
@@ -368,11 +371,18 @@ export default {
         return "danger";
       }
     },
+    roleCheck(role) {
+      if (role > 1) {
+        return "管理员";
+      } else {
+        return "用户";
+      }
+    },
     roleCheckClass(role) {
       if (role > 1) {
-        return "Admin";
+        return "warn"
       } else {
-        return "user";
+        return "success";
       }
     },
     load() {

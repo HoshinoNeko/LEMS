@@ -35,79 +35,36 @@
       <div class="col-12 col-md-6 col-xl-4">
         <div class="card h-100">
           <div class="p-3 pb-0 card-header">
-            <h6 class="mb-0">Platform Settings</h6>
+            <h6 class="mb-0">修改密码</h6>
           </div>
           <div class="p-3 card-body">
-            <h6 class="text-xs text-uppercase text-body font-weight-bolder">
-              Account
-            </h6>
-            <ul class="list-group">
-              <li class="px-0 border-0 list-group-item">
-                <vsud-switch
-                  id="flexSwitchCheckDefault"
-                  name="email"
-                  class="ps-0 ms-auto"
-                  label-class="mb-0 text-body ms-3 text-truncate w-80"
-                  checked
-                  >Email me when someone follows me</vsud-switch
-                >
-              </li>
-              <li class="px-0 border-0 list-group-item">
-                <vsud-switch
-                  id="flexSwitchCheckDefault1"
-                  name="Email"
-                  label-class="mb-0 text-body ms-3 text-truncate w-80"
-                  class="ps-0 ms-auto"
-                  >Email me when someone answers on my post</vsud-switch
-                >
-              </li>
-
-              <li class="px-0 border-0 list-group-item">
-                <vsud-switch
-                  id="flexSwitchCheckDefault2"
-                  name="Email"
-                  label-class="mb-0 text-body ms-3 text-truncate w-80"
-                  class="ps-0 ms-auto"
-                  checked
-                  >Email me when someone mentions me</vsud-switch
-                >
-              </li>
-            </ul>
-            <h6
-              class="mt-4 text-xs text-uppercase text-body font-weight-bolder"
-            >
-              Application
-            </h6>
-            <ul class="list-group">
-              <li class="px-0 border-0 list-group-item">
-                <vsud-switch
-                  id="flexSwitchCheckDefault3"
-                  name="Project Launch"
-                  class="ps-0 ms-auto"
-                  label-class="mb-0 text-body ms-3 text-truncate w-80"
-                  >New launches and projects</vsud-switch
-                >
-              </li>
-              <li class="px-0 border-0 list-group-item">
-                <vsud-switch
-                  id="flexSwitchCheckDefault4"
-                  name="Product Update"
-                  class="ps-0 ms-auto"
-                  label-class="mb-0 text-body ms-3 text-truncate w-80"
-                  checked
-                  >Monthly product updates</vsud-switch
-                >
-              </li>
-              <li class="px-0 pb-0 border-0 list-group-item">
-                <vsud-switch
-                  id="flexSwitchCheckDefault5"
-                  name="Newsletter"
-                  class="ps-0 ms-auto"
-                  label-class="mb-0 text-body ms-3 text-truncate w-80"
-                  >Subscribe to newsletter</vsud-switch
-                >
-              </li>
-            </ul>
+            <form class="text-start" action="">
+              <label>源密码</label>
+              <vsud-input
+                  id="oldPW"
+                  type="number"
+                  placeholder="旧密码"
+                  name="sid"
+              />
+              <label>新密码</label>
+              <vsud-input
+                  id="newPW"
+                  type="password"
+                  placeholder="新密码"
+                  name="password"
+              />
+              <div class="text-center">
+                <vsud-button
+                    class="my-4 mb-2"
+                    variant="gradient"
+                    color="success"
+                    full-width
+                    type="button"
+                    @Click="alterPW()"
+                >登录
+                </vsud-button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -116,7 +73,6 @@
 </template>
 
 <script>
-import VsudSwitch from "@/components/VsudSwitch.vue";
 import sophie from "@/assets/img/kal-visuals-square.jpg";
 import marie from "@/assets/img/marie.jpg";
 import ivana from "@/assets/img/ivana-square.jpg";
@@ -129,6 +85,8 @@ import team1 from "@/assets/img/team-1.jpg";
 import team2 from "@/assets/img/team-2.jpg";
 import team3 from "@/assets/img/team-3.jpg";
 import team4 from "@/assets/img/team-4.jpg";
+import VsudInput from "@/components/VsudInput.vue";
+import VsudButton from "@/components/VsudButton.vue";
 import {
   faFacebook,
   faTwitter,
@@ -136,11 +94,14 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
+import {message} from "ant-design-vue";
+import axios from "axios";
 
 export default {
   name: "ProfileOverview",
   components: {
-    VsudSwitch,
+    VsudInput,
+    VsudButton,
   },
   data() {
     return {
@@ -167,7 +128,6 @@ export default {
       },
     };
   },
-
   mounted() {
     this.$store.state.isAbsolute = true;
     setNavPills();
@@ -183,6 +143,34 @@ export default {
   methods: {
     load() {
       this.$store.dispatch('loadUser', this.data)
+    },
+    alterPW() {
+      let oldPW = document.getElementById("oldPW").value;
+      let newPW = document.getElementById("newPW").value;
+      if (!oldPW) {
+        return message.warning("未输入旧密码")
+      } else if (!newPW) {
+        return message.warning("未输入新密码")
+      }
+      console.log(oldPW, newPW)
+      const url = "http://localhost:4000/api/user/updatePW";
+      const token = localStorage.getItem("token");
+      try {
+        axios.post(url, `oldPW=${oldPW}&newPW=${newPW}`, {
+          headers: {
+            Authorization: ` ${token}`
+          }
+        }).then(response => {
+          if (response.data.status === 0) {
+            message.success(response.data.message)
+          } else {
+            message.error(response.data.message)
+          }
+        });
+      } catch (error) {
+        console.log(error);
+        alert("Unknown error")
+      }
     },
     loadInfo() {
       let userInfo = localStorage.getItem("user")

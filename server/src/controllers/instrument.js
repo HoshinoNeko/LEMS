@@ -41,8 +41,8 @@ const editInstrument = (req, res) => {
     Instrument.editDevice(req.params.id, req.body.name, req.body.symbol, req.body.location, req.body.instruction, req.body.enable, req.body.remark, req.body.department, (err, instrument) => {
         if (err) {
             res.json({
-                success: 1,
-                msg: 'Failed to edit instrument'
+                status: 1,
+                message: 'Failed to edit instrument'
             });
         } else {
             res.json({
@@ -75,13 +75,13 @@ const deleteInstrument = (req, res) => {
     Instrument.delDevice(req.params.id, (err, instrument) => {
         if (err) {
             res.json({
-                success: 1,
-                msg: 'Failed to delete instrument'
+                status: 1,
+                message: err
             });
         } else {
             res.json({
-                success: 0,
-                msg: 'Instrument deleted',
+                status: 0,
+                message: 'Instrument deleted',
             });
         }
     });

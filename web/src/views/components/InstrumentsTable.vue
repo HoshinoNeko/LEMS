@@ -1,8 +1,8 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6 style="display: inline-block;">Device table</h6>
-      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">New Device</a-button>
+      <h6 style="display: inline-block;">设备管理</h6>
+      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">新增设备</a-button>
       <a-modal
           v-model:visible="visible"
           title="New Instrument"
@@ -11,7 +11,7 @@
           @ok="hideModal"
       >
         <a-form-item class="ant-form ant-form-vertical">
-          <span class="form-label-text" style="display: block;">Name</span>
+          <span class="form-label-text" style="display: block;">设备名称</span>
           <a-textarea
               type="text"
               id="addName"
@@ -19,7 +19,7 @@
               class="ant-col ant-form-item-control"
               style="width: 100%;"
           />
-          <span class="form-label-text" style="display: block;">Symbol</span>
+          <span class="form-label-text" style="display: block;">设备标识</span>
           <a-textarea
               type="number"
               id="addSymbol"
@@ -27,7 +27,7 @@
               style="width: 100%;"
               placeholder="Symbol"
           />
-          <span class="form-label-text" style="display: block;">Location</span>
+          <span class="form-label-text" style="display: block;">设备位置</span>
           <a-textarea
               type="text"
               id="addLocation"
@@ -35,7 +35,7 @@
               class="ant-col ant-form-item-control"
               style="width: 100%;"
           />
-          <span class="form-label-text" style="display: block;">Instruction</span>
+          <span class="form-label-text" style="display: block;">使用说明</span>
           <a-textarea
               type="text"
               id="addInstruction"
@@ -43,7 +43,7 @@
               style="width: 100%;"
               placeholder="Instruction"
           />
-          <span class="form-label-text" style="display: block;">Enable 0 for enable 1 for disable</span>
+          <span class="form-label-text" style="display: block;">可用? 0为可用 1为禁用</span>
           <a-textarea
               type="number"
               id="addEnable"
@@ -51,7 +51,7 @@
               class="ant-col ant-form-item-control"
               style="width: 100%;"
           />
-          <span class="form-label-text" style="display: block;">Remark</span>
+          <span class="form-label-text" style="display: block;">备注</span>
           <a-textarea
               type="text"
               id="addRemark"
@@ -70,37 +70,36 @@
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Instrument Name / ID
+                设备名称 / ID
+              </th>
+              <th
+                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+              >设备标识
               </th>
               <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                Symbol
-              </th>
-              <th
-                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-              >
-                Location
+                设备位置
               </th>
               <th
                   class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                Enable
+                可用
               </th>
               <th
                   class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
               >
-                Occupied
+                占用
               </th>
               <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Instruction
+                使用说明
               </th>
               <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
               >
-                Add at
+                添加时间
               </th>
               <th class="text-secondary opacity-7"></th>
               <th class="text-secondary opacity-7"></th>
@@ -135,7 +134,10 @@
                 >{{ statusCheck(l.occupied) }}</vsud-badge
                 >
               </td>
-              <td>
+              <td class="align-middle text-center text-sm" v-if="isUrl(l.instruction)">
+                <p class="text-xs font-weight-bold mb-0"><a style="color: deepskyblue;" target="_blank" :href=l.instruction ><img style="width: 20%;" src="https://img.icons8.com/ios-glyphs/60/link--v1.png" alt="LINK"></a></p>
+              </td>
+              <td class="align-middle text-center text-sm" v-else>
                 <p class="text-xs font-weight-bold mb-0">{{l.instruction}}</p>
               </td>
               <td class="align-middle text-center">
@@ -144,23 +146,23 @@
                 >
               </td>
               <td class="align-middle text-center">
-                <a-button type="primary" @click="showEdit(l.id)">Edit</a-button>
+                <a-button type="primary" @click="showEdit(l.id)">修改</a-button>
               </td>
               <td class="align-middle text-center" v-if="l.enable===0">
                 <a-popconfirm title="确认禁用吗" @confirm="disableDevice(l.id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Disable</a-button
+                  <a-button type="danger" size="sm">禁用</a-button
                   ></a-popconfirm
                 >
               </td>
               <td class="align-middle text-center" v-else>
                 <a-popconfirm title="确认启用吗" @confirm="enableDevice(l.id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Enable</a-button
+                  <a-button type="primary" size="sm">启用</a-button
                   ></a-popconfirm
                 >
               </td>
               <td class="align-middle">
                 <a-popconfirm title="确认删除吗" @confirm="deleteUser(l.id)" @cancel="cancel">
-                  <a-button danger size="sm" class="text-danger">Delete</a-button
+                  <a-button danger size="sm" class="text-danger">移除</a-button
                 ></a-popconfirm
                 >
               </td>
@@ -175,50 +177,50 @@
               @ok="hideEdit(l.id)"
           >
             <form>
-              <span class="form-label-text" style="display: block;">Edit Instrument</span>
-              <span class="form-label-text" style="display: block;">Name</span>
+              <span class="form-label-text" style="display: block;">设备修改</span>
+              <span class="form-label-text" style="display: block;">设备名称</span>
               <input
                   type="text"
                   id="editName"
                   class="form-input"
                   placeholder="Name"
               >
-              <span class="form-label-text" style="display: block;">Symbol</span>
+              <span class="form-label-text" style="display: block;">设备标识</span>
               <input
                   type="text"
                   id="editSymbol"
                   class="form-input"
                   placeholder="Symbol"
               >
-              <span class="form-label-text" style="display: block;">Location</span>
+              <span class="form-label-text" style="display: block;">设备位置</span>
               <input
                   type="text"
                   id="editLocation"
                   class="form-input"
                   placeholder="Location"
               >
-              <span class="form-label-text" style="display: block;">Instruction</span>
+              <span class="form-label-text" style="display: block;">设备说明</span>
               <input
                   type="text"
                   id="editInstruction"
                   class="form-input"
                   placeholder="Instruction"
               >
-              <span class="form-label-text" style="display: block;">Enable</span>
+              <span class="form-label-text" style="display: block;">启用</span>
               <input
                   type="text"
                   id="editEnable"
                   class="form-input"
                   placeholder="Enable"
               >
-              <span class="form-label-text" style="display: block;">Department</span>
+              <span class="form-label-text" style="display: block;">所属部门</span>
               <input
                   type="text"
                   id="editDepartment"
                   class="form-input"
                   placeholder="Department"
               >
-              <span class="form-label-text" style="display: block;">Remark</span>
+              <span class="form-label-text" style="display: block;">备注</span>
               <input
                   type="text"
                   id="editRemark"
@@ -360,7 +362,7 @@ export default {
   methods: {
     deleteUser(id) {
       const token = localStorage.getItem("token");
-      axios.delete(`http://localhost:4000/api/instrument/${id}/delInstrument`, {
+      axios.delete(`http://localhost:4000/api/instrument/${id}/delete`, {
         headers: {
           Authorization: `${token}`
         }
@@ -405,9 +407,9 @@ export default {
     },
     statusCheck(status) {
       if (status === 1) {
-        return "Disabled";
+        return "不可用";
       } else {
-        return "Enabled";
+        return "可用";
       }
     },
     statusCheckClass(status) {
@@ -423,6 +425,9 @@ export default {
       } else {
         return "user";
       }
+    },
+    isUrl(urlop) {
+      return urlop.startsWith("http");
     },
     load() {
       const url = "http://localhost:4000/api/instrument";

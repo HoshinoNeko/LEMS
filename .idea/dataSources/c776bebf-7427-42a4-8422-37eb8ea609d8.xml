@@ -1,161 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="lab@localhost">
-  <database-model serializer="dbm" dbms="MARIADB" family-id="MARIADB" format-version="4.39">
-    <root id="1">
-      <DefaultCasing>exact</DefaultCasing>
-      <DefaultEngine>InnoDB</DefaultEngine>
-      <Grants>|root||mysql|localhost|ALTER|G
-|root||root||ALTER|G
-|root||root|localhost|ALTER|G
-|root||mysql|localhost|ALTER ROUTINE|G
-|root||root||ALTER ROUTINE|G
-|root||root|localhost|ALTER ROUTINE|G
-|root||mysql|localhost|BINLOG ADMIN|G
-|root||root||BINLOG ADMIN|G
-|root||root|localhost|BINLOG ADMIN|G
-|root||mysql|localhost|BINLOG MONITOR|G
-|root||root||BINLOG MONITOR|G
-|root||root|localhost|BINLOG MONITOR|G
-|root||mysql|localhost|BINLOG REPLAY|G
-|root||root||BINLOG REPLAY|G
-|root||root|localhost|BINLOG REPLAY|G
-|root||mysql|localhost|CONNECTION ADMIN|G
-|root||root||CONNECTION ADMIN|G
-|root||root|localhost|CONNECTION ADMIN|G
-|root||mysql|localhost|CREATE|G
-|root||root||CREATE|G
-|root||root|localhost|CREATE|G
-|root||mysql|localhost|CREATE ROUTINE|G
-|root||root||CREATE ROUTINE|G
-|root||root|localhost|CREATE ROUTINE|G
-|root||mysql|localhost|CREATE TABLESPACE|G
-|root||root||CREATE TABLESPACE|G
-|root||root|localhost|CREATE TABLESPACE|G
-|root||mysql|localhost|CREATE TEMPORARY TABLES|G
-|root||root||CREATE TEMPORARY TABLES|G
-|root||root|localhost|CREATE TEMPORARY TABLES|G
-|root||mysql|localhost|CREATE USER|G
-|root||root||CREATE USER|G
-|root||root|localhost|CREATE USER|G
-|root||mysql|localhost|CREATE VIEW|G
-|root||root||CREATE VIEW|G
-|root||root|localhost|CREATE VIEW|G
-|root||mysql|localhost|DELETE|G
-|root||root||DELETE|G
-|root||root|localhost|DELETE|G
-|root||mysql|localhost|DELETE HISTORY|G
-|root||root||DELETE HISTORY|G
-|root||root|localhost|DELETE HISTORY|G
-|root||mysql|localhost|DROP|G
-|root||root||DROP|G
-|root||root|localhost|DROP|G
-|root||mysql|localhost|EVENT|G
-|root||root||EVENT|G
-|root||root|localhost|EVENT|G
-|root||mysql|localhost|EXECUTE|G
-|root||root||EXECUTE|G
-|root||root|localhost|EXECUTE|G
-|root||mysql|localhost|FEDERATED ADMIN|G
-|root||root||FEDERATED ADMIN|G
-|root||root|localhost|FEDERATED ADMIN|G
-|root||mysql|localhost|FILE|G
-|root||root||FILE|G
-|root||root|localhost|FILE|G
-|root||mysql|localhost|INDEX|G
-|root||root||INDEX|G
-|root||root|localhost|INDEX|G
-|root||mysql|localhost|INSERT|G
-|root||root||INSERT|G
-|root||root|localhost|INSERT|G
-|root||mysql|localhost|LOCK TABLES|G
-|root||root||LOCK TABLES|G
-|root||root|localhost|LOCK TABLES|G
-|root||mysql|localhost|PROCESS|G
-|root||root||PROCESS|G
-|root||root|localhost|PROCESS|G
-|root||mysql|localhost|READ_ONLY ADMIN|G
-|root||root||READ_ONLY ADMIN|G
-|root||root|localhost|READ_ONLY ADMIN|G
-|root||mysql|localhost|REFERENCES|G
-|root||root||REFERENCES|G
-|root||root|localhost|REFERENCES|G
-|root||mysql|localhost|RELOAD|G
-|root||root||RELOAD|G
-|root||root|localhost|RELOAD|G
-|root||mysql|localhost|REPLICATION MASTER ADMIN|G
-|root||root||REPLICATION MASTER ADMIN|G
-|root||root|localhost|REPLICATION MASTER ADMIN|G
-|root||mysql|localhost|REPLICATION SLAVE|G
-|root||root||REPLICATION SLAVE|G
-|root||root|localhost|REPLICATION SLAVE|G
-|root||mysql|localhost|REPLICATION SLAVE ADMIN|G
-|root||root||REPLICATION SLAVE ADMIN|G
-|root||root|localhost|REPLICATION SLAVE ADMIN|G
-|root||mysql|localhost|SELECT|G
-|root||root||SELECT|G
-|root||root|localhost|SELECT|G
-|root||mysql|localhost|SET USER|G
-|root||root||SET USER|G
-|root||root|localhost|SET USER|G
-|root||mysql|localhost|SHOW DATABASES|G
-|root||root||SHOW DATABASES|G
-|root||root|localhost|SHOW DATABASES|G
-|root||mysql|localhost|SHOW VIEW|G
-|root||root||SHOW VIEW|G
-|root||root|localhost|SHOW VIEW|G
-|root||mysql|localhost|SHUTDOWN|G
-|root||root||SHUTDOWN|G
-|root||root|localhost|SHUTDOWN|G
-|root||mysql|localhost|SLAVE MONITOR|G
-|root||root||SLAVE MONITOR|G
-|root||root|localhost|SLAVE MONITOR|G
-|root||mysql|localhost|SUPER|G
-|root||root||SUPER|G
-|root||root|localhost|SUPER|G
-|root||mysql|localhost|TRIGGER|G
-|root||root||TRIGGER|G
-|root||root|localhost|TRIGGER|G
-|root||mysql|localhost|UPDATE|G
-|root||root||UPDATE|G
-|root||root|localhost|UPDATE|G
-|root||mysql|localhost|grant option|G
-|root||root|localhost|grant option|G
-test|schema||&apos;&apos;||ALTER|G
-test|schema||&apos;&apos;||CREATE|G
-test|schema||&apos;&apos;||CREATE ROUTINE|G
-test|schema||&apos;&apos;||CREATE TEMPORARY TABLES|G
-test|schema||&apos;&apos;||CREATE VIEW|G
-test|schema||&apos;&apos;||DELETE|G
-test|schema||&apos;&apos;||DELETE HISTORY|G
-test|schema||&apos;&apos;||DROP|G
-test|schema||&apos;&apos;||EVENT|G
-test|schema||&apos;&apos;||INDEX|G
-test|schema||&apos;&apos;||INSERT|G
-test|schema||&apos;&apos;||LOCK TABLES|G
-test|schema||&apos;&apos;||REFERENCES|G
-test|schema||&apos;&apos;||SELECT|G
-test|schema||&apos;&apos;||SHOW VIEW|G
-test|schema||&apos;&apos;||TRIGGER|G
-test|schema||&apos;&apos;||UPDATE|G
-test\\_%|schema||&apos;&apos;||ALTER|G
-test\\_%|schema||&apos;&apos;||CREATE|G
-test\\_%|schema||&apos;&apos;||CREATE ROUTINE|G
-test\\_%|schema||&apos;&apos;||CREATE TEMPORARY TABLES|G
-test\\_%|schema||&apos;&apos;||CREATE VIEW|G
-test\\_%|schema||&apos;&apos;||DELETE|G
-test\\_%|schema||&apos;&apos;||DELETE HISTORY|G
-test\\_%|schema||&apos;&apos;||DROP|G
-test\\_%|schema||&apos;&apos;||EVENT|G
-test\\_%|schema||&apos;&apos;||INDEX|G
-test\\_%|schema||&apos;&apos;||INSERT|G
-test\\_%|schema||&apos;&apos;||LOCK TABLES|G
-test\\_%|schema||&apos;&apos;||REFERENCES|G
-test\\_%|schema||&apos;&apos;||SELECT|G
-test\\_%|schema||&apos;&apos;||SHOW VIEW|G
-test\\_%|schema||&apos;&apos;||TRIGGER|G
-test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
-      <ServerVersion>10.7.3</ServerVersion>
-    </root>
+  <database-model serializer="dbm" dbms="MARIADB" family-id="MARIADB" format-version="4.40">
+    <root id="1"/>
     <collation id="2" parent="1" name="armscii8_bin">
       <Charset>armscii8</Charset>
     </collation>
@@ -1319,9 +1165,9 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <Type>btree</Type>
     </index>
     <key id="362" parent="342" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="363" parent="343" name="id">
       <AutoIncrement>7</AutoIncrement>
@@ -1381,9 +1227,9 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <Position>10</Position>
     </column>
     <key id="373" parent="343" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="374" parent="344" name="id">
       <AutoIncrement>1</AutoIncrement>
@@ -1441,9 +1287,9 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <Type>btree</Type>
     </index>
     <key id="384" parent="344" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="385" parent="345" name="id">
       <AutoIncrement>1</AutoIncrement>
@@ -1464,9 +1310,9 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <Position>3</Position>
     </column>
     <key id="388" parent="345" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="389" parent="346" name="id">
       <AutoIncrement>1</AutoIncrement>
@@ -1544,9 +1390,9 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <Type>btree</Type>
     </index>
     <key id="403" parent="346" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="404" parent="347" name="id">
       <AutoIncrement>1</AutoIncrement>
@@ -1567,9 +1413,9 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <Position>3</Position>
     </column>
     <key id="407" parent="347" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="408" parent="348" name="id">
       <AutoIncrement>1</AutoIncrement>
@@ -1625,9 +1471,9 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <Type>btree</Type>
     </index>
     <key id="418" parent="348" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="419" parent="349" name="id">
       <AutoIncrement>1</AutoIncrement>
@@ -1667,9 +1513,9 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <Type>btree</Type>
     </index>
     <key id="426" parent="349" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="427" parent="350" name="id">
       <AutoIncrement>13</AutoIncrement>
@@ -1732,9 +1578,9 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <Position>10</Position>
     </column>
     <key id="437" parent="350" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
   </database-model>
 </dataSource>

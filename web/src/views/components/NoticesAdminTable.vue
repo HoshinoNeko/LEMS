@@ -1,13 +1,13 @@
 <template>
   <div class="card mb-4">
     <div class="card-header pb-0">
-      <h6 style="display: inline-block;">Notice table</h6>
-      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">New Notice</a-button>
+      <h6 style="display: inline-block;">公告管理</h6>
+      <a-button type="primary" @click="showModal" style="position: absolute; right: 1.5rem;">新公告</a-button>
       <a-modal
           v-model:visible="visible"
-          title="New Announcement"
-          ok-text="Conform"
-          cancel-text="Cancel"
+          title="新公告"
+          ok-text="确认"
+          cancel-text="取消"
           @ok="hideModal"
       >
         <a-form-item class="ant-form ant-form-vertical">
@@ -42,7 +42,7 @@
           </a-list-item-meta>
           <td class="align-middle text-center" style="padding: 1.5rem;">
             <a-popconfirm title="确认删除吗" @confirm="deleteNotice(item.id)" @cancel="cancel">
-              <a-button danger size="sm" class="text-danger">Delete</a-button
+              <a-button danger size="sm" class="text-danger">删除</a-button
               ></a-popconfirm
             >
           </td>
